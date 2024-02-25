@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "likes")
-public class Likes {
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,11 +20,11 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "boards_id", nullable = false)
-    private Boards boards;
+    private Board board;
 
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
-    private Users users;
+    private User user;
 
 }

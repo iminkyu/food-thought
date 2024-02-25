@@ -1,7 +1,7 @@
-package com.example.foodthought.controller.likes;
+package com.example.foodthought.controller.like;
 
 import com.example.foodthought.common.ResponseDto;
-import com.example.foodthought.service.likes.LikesService;
+import com.example.foodthought.service.like.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards/{boardId}/likes")
-public class LikesController {
+public class LikeController {
 
-    private LikesService likesService;
+    private LikeService likeService;
 
 
     @PostMapping
-    public ResponseDto toggleLikes(
+    public ResponseDto toggleLike(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long boardId){
-        return likesService.toggleLikes(userDetails.getUser(), boardId);
+        return likeService.toggleLike(userDetails.getUser(), boardId);
     }
 }
