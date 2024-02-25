@@ -1,4 +1,4 @@
-package com.example.foodthought.repository;
+package com.example.foodthought.repository.likes;
 
 import com.example.foodthought.entity.Likes;
 import org.springframework.data.jpa.repository.JpaRepository;

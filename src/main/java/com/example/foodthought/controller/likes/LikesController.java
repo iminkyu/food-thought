@@ -1,7 +1,7 @@
-package com.example.foodthought.controller;
+package com.example.foodthought.controller.likes;
 
 import com.example.foodthought.common.ResponseDto;
-import com.example.foodthought.service.LikesService;
+import com.example.foodthought.service.likes.LikesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;

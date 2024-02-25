@@ -1,9 +1,9 @@
-package com.example.foodthought.service;
+package com.example.foodthought.service.likes;
 
 import com.example.foodthought.common.ResponseDto;
 import com.example.foodthought.entity.Boards;
 import com.example.foodthought.entity.Likes;
-import com.example.foodthought.repository.LikesRepository;
+import com.example.foodthought.repository.likes.LikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
