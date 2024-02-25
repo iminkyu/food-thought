@@ -17,7 +17,7 @@ public class LikesService {
     //좋아요/좋아요 취소
     public ResponseDto toggleLikes(Users users, Long boardId) {
         Boards boards = boardService.findBoard(boardId);
-        Likes likes = Likes.builder().users(users).boards(boards).build();
+        Likes likes = buildLikes(users,boards);
 
         if (isLikes(likes.getUsers().getId(), likes.getBoards().getId())) {
             likesRepository.delete(likes);
@@ -32,5 +32,11 @@ public class LikesService {
     //Likes 존재여부 확인
     private boolean isLikes(Long boardId, Long userId) {
         return likesRepository.findLikesByBoard_IdAndUser_IdEquals(boardId, userId);
+    }
+
+
+    //Likes Entity 생성
+    private Likes buildLikes(Users users, Boards boards){
+        return Likes.builder().users(users).boards(boards).build();
     }
 }
