@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "follows")
-public class Follows {
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,10 +20,10 @@ public class Follows {
 
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
-    private Users follower;
+    private User follower;
 
 
     @ManyToOne
     @JoinColumn(name = "recever_id", nullable = false)
-    private Users following;
+    private User following;
 }
