@@ -1,8 +1,11 @@
 package com.example.foodthought.service.follow;
 
-import com.example.foodthought.common.ResponseDto;
+import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.entity.Follow;
+import com.example.foodthought.entity.User;
+import com.example.foodthought.repository.UserRepository;
 import com.example.foodthought.repository.follow.FollowRepository;
+import com.example.foodthought.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +14,21 @@ import org.springframework.stereotype.Service;
 public class FollowService {
 
     private FollowRepository followRepository;
-    private UserService userService;
+    private UserRepository userRepository;
 
 
     //팔로우/취소
     public ResponseDto addFollow(User user, Long followerId) {
-        //팔로워 가져오기
-//        Users follower = usersService.유저검증메소드(followerId);
+        User follower = userRepository.findById(followerId).orElseThrow(() ->
+                new IllegalArgumentException("해당하는 유저가 없습니다.")
+        );
         Follow follow = buildEntity(user, follower);
         if (isFollow(user.getId(), follower.getId())) {
             followRepository.delete(follow);
-            return new ResponseDto(200, follower.getName() + "님을 팔로우 취소했습니다");
+            return new ResponseDto(200, follower.getUsername() + "님을 팔로우 취소했습니다");
         } else {
             followRepository.save(follow);
-            return new ResponseDto(200, follower.getName() + "님을 팔로우 했습니다.");
+            return new ResponseDto(200, follower.getUsername() + "님을 팔로우 했습니다.");
         }
     }
 
