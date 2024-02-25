@@ -1,6 +1,6 @@
 package com.example.foodthought.controller.follow;
 
-import com.example.foodthought.common.ResponseDto;
+import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.service.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,3 +22,4 @@ public class FollowController {
         return followService.addFollow(userDetails.getUser(), followerId);
     }
 }
+
