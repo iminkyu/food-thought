@@ -4,7 +4,7 @@ import com.example.foodthought.dto.user.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.File;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +31,12 @@ public class User extends Timestamped{
 
     @Column()
     private String userPhoto;
+
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> follower;
+
+    @OneToMany(mappedBy = "following")
+    private List<Follow> following;
 
     public User(CreateUserDto createUserDto, String passwordEncryption, String fileName){
         this.userId = createUserDto.getUserId();

@@ -1,5 +1,6 @@
 package com.example.foodthought.service.follow;
 
+import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.entity.Follow;
 import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.UserRepository;
@@ -19,18 +20,18 @@ public class FollowService {
 
     //팔로우/취소
     @Transactional
-    public void toggleFollow(User user, Long followerId) {
+    public ResponseDto toggleFollow(User user, Long followerId) {
         User follower = userRepository.findById(followerId).orElseThrow(() ->
                 new IllegalArgumentException("해당하는 유저가 없습니다.")
         );
         Follow oldFollow = findFollow(user.getId(), follower.getId());
         if (oldFollow != null) {
             followRepository.delete(oldFollow);
-            //responseDto 204
+            return ResponseDto.success(HttpStatus.NO_CONTENT.value());
         } else {
             Follow follow = buildEntity(user, follower);
             followRepository.save(follow);
-            //responseDto 204
+            return ResponseDto.success(HttpStatus.NO_CONTENT.value());
         }
     }
 
