@@ -38,9 +38,6 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "following")
     private List<Follow> following;
 
-    @OneToMany(mappedBy = "user")
-    private List<Like> likes;
-
     public User(CreateUserDto createUserDto, String passwordEncryption, String fileName){
         this.userId = createUserDto.getUserId();
         this.username = createUserDto.getUsername();
