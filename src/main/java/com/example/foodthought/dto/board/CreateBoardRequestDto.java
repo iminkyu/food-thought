@@ -14,13 +14,4 @@ public class CreateBoardRequestDto {
     private String bookimage;
     private String bookcategory;
     private String contents;
-
-    CreateBoardRequestDto createBoardRequestDto = CreateBoardRequestDto.builder()
-            .booktitle(booktitle)
-            .bookauthor(bookauthor)
-            .bookpublisher(bookpublisher)
-            .bookimage(bookimage)
-            .bookcategory(bookcategory)
-            .contents(contents)
-            .build();
 }
