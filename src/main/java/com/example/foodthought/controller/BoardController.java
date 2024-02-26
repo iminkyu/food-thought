@@ -7,9 +7,9 @@ import com.example.foodthought.dto.board.UpdateBoardRequestDto;
 import com.example.foodthought.security.UserDetailsImpl;
 import com.example.foodthought.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +27,7 @@ public class BoardController {
                                                 //서비스한테 일을 주는거예요
 //        ResponseEntity<ResponseDto> response = boardService.createBoard(create,userDetails.getUser()); // 1
 //        return response;
-        return boardService.createBoard(create, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(create, userDetails.getUser()));
 
     }
 
