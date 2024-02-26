@@ -1,13 +1,14 @@
 package com.example.foodthought.entity;
 
 
+import com.example.foodthought.dto.user.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -19,6 +20,16 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private User users;
+
+//    @OneToMany
+//    private List<Comment> comments;
+//
+//    @OneToMany
+//    private List<Like> likes;
 
     @Column(nullable = false, length = 255)
     private String booktitle;
@@ -37,6 +48,4 @@ public class Board {
 
     @Column(nullable = false, length = 65535)
     private String contents;
-
-
 }
