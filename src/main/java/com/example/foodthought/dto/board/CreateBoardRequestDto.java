@@ -4,14 +4,13 @@ import lombok.*;
 
 @AllArgsConstructor
 @Getter
-@Setter
 @NoArgsConstructor
 @Builder
 public class CreateBoardRequestDto {
-    private String booktitle;
-    private String bookauthor;
-    private String bookpublisher;
-    private String bookimage;
-    private String bookcategory;
+    private String title;
+    private String author;
+    private String publisher;
+    private String image;
+    private String category;
     private String contents;
 }

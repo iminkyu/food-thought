@@ -4,16 +4,15 @@ package com.example.foodthought.dto.board;
 import lombok.*;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class GetBoardResponseDto {
-    private String booktitle;
-    private String bookauthor;
-    private String bookpublisher;
-    private String bookimage;
-    private String bookcategory;
+    private String title;
+    private String author;
+    private String publisher;
+    private String image;
+    private String category;
     private String contents;
 }
 
