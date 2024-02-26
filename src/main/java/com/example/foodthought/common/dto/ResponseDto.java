@@ -23,7 +23,7 @@ public class ResponseDto<T>{
      * @return ResponseDto
      */
     public static <T> ResponseDto<T> success(int status){
-        return new ResponseDto<>(status,null,null);
+            return new ResponseDto<>(status,null,null);
     }
 
     /**
