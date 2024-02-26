@@ -18,31 +18,13 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User users;
 
-//    @OneToMany
-//    private List<Comment> comments;
-//
-//    @OneToMany
-//    private List<Like> likes;
-
-    @Column(nullable = false, length = 255)
-    private String booktitle;
-
-    @Column(nullable = false, length = 255)
-    private String bookauthor;
-
-    @Column(nullable = false, length = 255)
-    private String bookpublisher;
-
-    @Column(nullable = false, length = 65535)
-    private String bookimage;
-
-    @Column(nullable = false, length = 255)
-    private String bookcategory;
+    @ManyToOne
+    @JoinColumn(name = "books_id")
+    private Book books;
 
     @Column(nullable = false, length = 65535)
     private String contents;
