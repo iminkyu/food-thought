@@ -39,4 +39,17 @@ public class CommentController {
             @PathVariable Long boardId) {
         return commentService.getCommentByBoard(boardId);
     }
+
+
+    // 댓글 수정
+    @PutMapping("/{boardId}/comments/{commentId}")
+    public ResponseEntity<ResponseDto> updateComment(
+            @PathVariable Long boardId,
+            @PathVariable Long commentId,
+            @RequestBody CommentRequest commentRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commentService.updateComment(boardId, commentId, commentRequest, userDetails.getUser()));
+    }
+
 }

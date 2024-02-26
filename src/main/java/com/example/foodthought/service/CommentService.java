@@ -41,6 +41,21 @@ public class CommentService {
     }
 
 
+    // 댓글 수정
+    public ResponseDto updateComment(Long boardId, Long commentId, CommentRequest commentRequest, User user) {
+        findBoard(boardId);
+        User findUser = findUser(user);
+        Comment comment = findComment(commentId);
+
+        if(!comment.getUser().equals(findUser)) {
+            throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
+        }
+        comment.updateComment(commentRequest);
+        return ResponseDto.success(HttpStatus.NO_CONTENT.value(), "댓글이 수정 되었습니다.");
+    }
+
+
+
     // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환
     private List<CommentResponse> convertToDtoList(List<Comment> commentList) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
@@ -50,6 +65,10 @@ public class CommentService {
         return commentResponseList;
     }
 
+
+    private Comment findComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("없는 댓글 입니다."));
+    }
 
     //유저 찾기
     private User findUser(User user) {
@@ -61,6 +80,5 @@ public class CommentService {
     private Board findBoard(Long boardId) {
         return boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("없는 게시글입니다."));
     }
-
 
 }
