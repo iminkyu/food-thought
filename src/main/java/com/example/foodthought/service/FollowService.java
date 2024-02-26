@@ -1,10 +1,10 @@
-package com.example.foodthought.service.follow;
+package com.example.foodthought.service;
 
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.entity.Follow;
 import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.UserRepository;
-import com.example.foodthought.repository.follow.FollowRepository;
+import com.example.foodthought.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

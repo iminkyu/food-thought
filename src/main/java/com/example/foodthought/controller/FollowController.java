@@ -1,8 +1,8 @@
-package com.example.foodthought.controller.follow;
+package com.example.foodthought.controller;
 
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.security.UserDetailsImpl;
-import com.example.foodthought.service.follow.FollowService;
+import com.example.foodthought.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
