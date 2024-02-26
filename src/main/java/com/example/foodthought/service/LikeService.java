@@ -1,6 +1,7 @@
 package com.example.foodthought.service;
 
 import com.example.foodthought.common.dto.ResponseDto;
+import com.example.foodthought.dto.board.LikeTopResponseDto;
 import com.example.foodthought.entity.Board;
 import com.example.foodthought.entity.Like;
 import com.example.foodthought.entity.User;
@@ -9,6 +10,9 @@ import com.example.foodthought.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,19 @@ public class LikeService {
             likeRepository.save(like);
         }
         return ResponseDto.success(HttpStatus.NO_CONTENT.value());
+    }
+
+
+    public ResponseDto findBoardByLikeTop3() {
+        List<Object[]> top3 = likeRepository.findBoardByLikeTop3();
+
+        List<LikeTopResponseDto> responseDtos = new ArrayList<>();
+        for (Object[] objects : top3) {
+            Board board = (Board) objects[0];
+            LikeTopResponseDto dto = LikeTopResponseDto.builder().board(board).countLikes((Long) objects[1]).build();
+            responseDtos.add(dto);
+        }
+        return ResponseDto.success(HttpStatus.CREATED.value(), responseDtos);
     }
 
 
