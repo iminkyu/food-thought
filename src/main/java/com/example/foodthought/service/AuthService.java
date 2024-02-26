@@ -35,7 +35,7 @@ public class AuthService {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return new ResponseDto(HttpStatus.OK.value(),"로그인 성공");
+        return ResponseDto.success(HttpStatus.OK.value());
     }
     public ResponseDto logout(HttpServletRequest request,
                               HttpServletResponse response){
@@ -44,6 +44,6 @@ public class AuthService {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return new ResponseDto(HttpStatus.OK.value(),"로그아웃 성공");
+        return ResponseDto.success(HttpStatus.OK.value());
     }
 }
