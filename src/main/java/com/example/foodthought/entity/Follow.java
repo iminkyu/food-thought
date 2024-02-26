@@ -19,11 +19,11 @@ public class Follow {
 
 
     @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "receiver_id", nullable = false)
     private User follower;
 
 
     @ManyToOne
-    @JoinColumn(name = "recever_id", nullable = false)
+    @JoinColumn(name = "sender_id", nullable = false)
     private User following;
 }

@@ -4,5 +4,5 @@ import com.example.foodthought.entity.Follow;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    boolean findFollowsByFollowing_IdAndFollower_IdEquals(Long followingId, Long followerId);
+    Follow findFollowsByFollowing_IdAndFollower_Id(Long followingId, Long followerId);
 }
