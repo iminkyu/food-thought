@@ -33,9 +33,9 @@ public class CommentController {
 
     // 댓글 조회
     @GetMapping("/{boardId}/comments")
-    public List<CommentResponse> getCommentByBoard(
+    public List<CommentResponse> getComment(
             @PathVariable Long boardId) {
-        return commentService.getCommentByBoard(boardId);
+        return commentService.getComment(boardId);
     }
 
 
@@ -57,7 +57,7 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         commentService.deleteComment(boardId, commentId, userDetails.getUser());
-        return ResponseEntity.ok("댓글 삭제 완료");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
