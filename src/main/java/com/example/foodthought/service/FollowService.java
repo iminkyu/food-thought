@@ -27,12 +27,11 @@ public class FollowService {
         Follow oldFollow = findFollow(user.getId(), follower.getId());
         if (oldFollow != null) {
             followRepository.delete(oldFollow);
-            return ResponseDto.success(HttpStatus.NO_CONTENT.value());
         } else {
             Follow follow = buildEntity(user, follower);
             followRepository.save(follow);
-            return ResponseDto.success(HttpStatus.NO_CONTENT.value());
         }
+        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
