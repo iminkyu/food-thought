@@ -12,6 +12,7 @@ import com.example.foodthought.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CommentService {
 
 
     // 댓글 생성
+    @Transactional
     public ResponseDto createComment(Long boardId, CommentRequest request, User user) {
         Board board = findBoard(boardId);
         User findUser = findUser(user);
@@ -36,24 +38,38 @@ public class CommentService {
     // 댓글 조회
     public List<CommentResponse> getCommentByBoard(Long boardId) {
         Board board = findBoard(boardId);
-        List<Comment> commentList = commentRepository.findByBoardBoardId(boardId);
+        List<Comment> commentList = commentRepository.findByBoardId(boardId);
         return convertToDtoList(commentList);
     }
 
 
     // 댓글 수정
+    @Transactional
     public ResponseDto updateComment(Long boardId, Long commentId, CommentRequest commentRequest, User user) {
         findBoard(boardId);
         User findUser = findUser(user);
         Comment comment = findComment(commentId);
 
-        if(!comment.getUser().equals(findUser)) {
+        if (!comment.getUser().equals(findUser)) {
             throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
         }
         comment.updateComment(commentRequest);
-        return ResponseDto.success(HttpStatus.NO_CONTENT.value(), "댓글이 수정 되었습니다.");
+        return ResponseDto.success(HttpStatus.CREATED.value(), "댓글이 수정 되었습니다.");
     }
 
+
+    // 댓글 삭제
+    @Transactional
+    public void deleteComment(Long boardId, Long commentId, User user) {
+        findBoard(boardId);
+        User findUser = findUser(user);
+        Comment comment = findComment(commentId);
+
+        if (!comment.getUser().equals(findUser)) {
+            throw new IllegalArgumentException("작성자만 삭제 할 수 있습니다.");
+        }
+        commentRepository.delete(comment);
+    }
 
 
     // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환
@@ -66,11 +82,13 @@ public class CommentService {
     }
 
 
+    // 댓글 찾기
     private Comment findComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("없는 댓글 입니다."));
     }
 
-    //유저 찾기
+
+    // 유저 찾기
     private User findUser(User user) {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("없는 사용자 입니다."));
     }
