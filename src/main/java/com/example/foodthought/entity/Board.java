@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -46,5 +48,4 @@ public class Board {
 
     @Column(nullable = false, length = 65535)
     private String contents;
-
 }
