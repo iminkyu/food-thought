@@ -1,4 +1,4 @@
-package com.example.foodthought.dto.board;
+package com.example.foodthought.dto.like;
 
 import com.example.foodthought.entity.Board;
 import com.example.foodthought.entity.Like;
@@ -12,6 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LikeTopResponseDto {
-     private Board board;
+     private Long boardId;
+     private String booktitle;
+     private String bookauthor;
+     private String bookpublisher;
+     private String bookimage;
+     private String bookcategory;
+     private String username;
+     private String contents;
      private Long countLikes;
 }

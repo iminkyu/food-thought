@@ -1,7 +1,7 @@
 package com.example.foodthought.service;
 
 import com.example.foodthought.common.dto.ResponseDto;
-import com.example.foodthought.dto.board.LikeTopResponseDto;
+import com.example.foodthought.dto.like.LikeTopResponseDto;
 import com.example.foodthought.entity.Board;
 import com.example.foodthought.entity.Like;
 import com.example.foodthought.entity.User;
@@ -43,7 +43,7 @@ public class LikeService {
         List<LikeTopResponseDto> responseDtos = new ArrayList<>();
         for (Object[] objects : top3) {
             Board board = (Board) objects[0];
-            LikeTopResponseDto dto = LikeTopResponseDto.builder().board(board).countLikes((Long) objects[1]).build();
+            LikeTopResponseDto dto = buildLikeTop(board,(Long)objects[1]);
             responseDtos.add(dto);
         }
         return ResponseDto.success(HttpStatus.CREATED.value(), responseDtos);
@@ -59,5 +59,19 @@ public class LikeService {
     //Like Entity 생성
     private Like buildLike(User user, Board board) {
         return Like.builder().user(user).board(board).build();
+    }
+
+
+    //LikeTopResponseDto 생성
+    private LikeTopResponseDto buildLikeTop(Board board ,Long countLikes){
+        return LikeTopResponseDto.builder().boardId(board.getId())
+                .booktitle(board.getBooktitle())
+                .bookauthor(board.getBookauthor())
+                .bookpublisher(board.getBookpublisher())
+                .bookcategory(board.getBookcategory())
+                .bookimage(board.getBookimage())
+                .username(board.getUsers().getUsername())
+                .contents(board.getContents())
+                .countLikes(countLikes).build();
     }
 }
