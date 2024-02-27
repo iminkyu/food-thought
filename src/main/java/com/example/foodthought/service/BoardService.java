@@ -27,11 +27,13 @@ public class BoardService {
         //리턴타입                  //메소드      //메소드실행하기위해 받아온 값 (컨트롤러한테 받아온값)
         //1. 게시물을 저장
         //유저한테 받은 게시물의 입력값  + 로그인한유저정보를 합쳐서 게시물을 작성
-        Board board = Board.builder().users(user).booktitle(create.getBooktitle()).bookauthor(create.getBookauthor())
-                .bookpublisher(create.getBookpublisher()).bookcategory(create.getBookcategory()).bookimage(create.getBookimage())
-                .contents(create.getContents()).build();
-        //작성된 게시물 저장
-        boardRepository.save(board);
+
+        //완희님한테 받아야함
+//        Board board = Board.builder().users(user).booktitle(create.getBooktitle()).bookauthor(create.getBookauthor())
+//                .bookpublisher(create.getBookpublisher()).bookcategory(create.getBookcategory()).bookimage(create.getBookimage())
+//                .contents(create.getContents()).build();
+//        //작성된 게시물 저장
+//        boardRepository.save(board);
 
         //2. 잘 작성됬다고 알려줄건지 << 이용자/포스트맨 각 1씩
         // 이용자한테전달할값 1 / postman전달할값 1
