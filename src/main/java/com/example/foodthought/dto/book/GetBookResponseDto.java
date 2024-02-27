@@ -3,6 +3,8 @@ package com.example.foodthought.dto.book;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class GetBookResponseDto {
@@ -12,4 +14,6 @@ public class GetBookResponseDto {
     private String publisher;
     private String image;
     private String category;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 }

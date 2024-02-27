@@ -5,6 +5,7 @@ import com.example.foodthought.dto.book.CreateBookRequestDto;
 import com.example.foodthought.dto.book.UpdateBookRequestDto;
 import com.example.foodthought.service.BookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -20,9 +22,14 @@ public class BookController {
     private final BookService bookService;
 
     //책 전체조회
-    @GetMapping("/allbook")
-    public ResponseEntity<ResponseDto> getAllBook() {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBook());
+    @GetMapping
+    public ResponseEntity<ResponseDto> getAllBook(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createAt") String sort,
+            @RequestParam(defaultValue = "false") boolean isASC
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBook(page, size, sort, isASC));
     }
 
 
@@ -37,7 +44,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<ResponseDto> createBook(
             @RequestPart CreateBookRequestDto createBookRequestDto,
-            @RequestPart(value = "bookImage", required = false) MultipartFile file) throws IOException {
+            @RequestPart(value = "bookImage", required = true) MultipartFile file) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(
                 createBookRequestDto, file));
     }
@@ -48,7 +55,7 @@ public class BookController {
     public ResponseEntity<ResponseDto> updateBook(
             @PathVariable Long bookId,
             @RequestPart UpdateBookRequestDto updateBookRequestDto,
-            @RequestPart(value = "bookImage", required = false) MultipartFile file) throws IOException {
+            @RequestPart(value = "bookImage", required = true) MultipartFile file) throws IOException {
         bookService.updateBook(bookId, updateBookRequestDto, file);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

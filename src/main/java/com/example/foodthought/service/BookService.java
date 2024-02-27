@@ -8,6 +8,9 @@ import com.example.foodthought.entity.Book;
 import com.example.foodthought.repository.BookRepository;
 import com.example.foodthought.util.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,17 +28,19 @@ public class BookService {
 
 
     //책 전체 조회
-    public ResponseDto getAllBook() {
+    public ResponseDto getAllBook(int page, int size, String sort, boolean IsAsc) {
         if (bookRepository.findAll().isEmpty()) {
-            throw new IllegalArgumentException("등록된 도서가 없습니다.");
+            throw new IllegalArgumentException("등록된 책이 없습니다.");
         }
-        return ResponseDto.success(201, convertToDtoList(bookRepository.findAll()));
+        PageRequest pageRequest = PageRequest.of(page, size, !IsAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
+
+        return ResponseDto.success(200, convertToDtoList(bookRepository.findAll(pageRequest)));
     }
 
 
     //책 단권 조회
     public ResponseDto getBook(Long bookId) {
-        return ResponseDto.success(201, convertToDto(findBook(bookId)));
+        return ResponseDto.success(200, convertToDto(findBook(bookId)));
     }
 
 
@@ -87,7 +92,7 @@ public class BookService {
 
 
     //북리스트를 builder 이용해서 GetBookResponseDto 리스트로 변환
-    private List<GetBookResponseDto> convertToDtoList(List<Book> books) {
+    private List<GetBookResponseDto> convertToDtoList(Page<Book> books) {
         List<GetBookResponseDto> getBookResponseDtos = new ArrayList<>();
         for (Book book : books) {
             GetBookResponseDto dto = GetBookResponseDto.builder()
@@ -96,6 +101,8 @@ public class BookService {
                     .publisher(book.getPublisher())
                     .image(book.getImage())
                     .category(book.getCategory())
+                    .createdAt(book.getCreateAt())
+                    .modifiedAt(book.getModifiedAt())
                     .build();
             getBookResponseDtos.add(dto);
         }
