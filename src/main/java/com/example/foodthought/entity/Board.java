@@ -25,11 +25,10 @@ public class Board {
     @JoinColumn(name = "users_id")
     private User users;
 
-//    @OneToMany
-//    private List<Comment> comments;
-//
-//    @OneToMany
-//    private List<Like> likes;
+    //book entity와의 연관관계 생성
+    @ManyToOne
+    @JoinColumn(name = "books_id")
+    private Book book;
 
     @Column(nullable = false, length = 255)
     private String booktitle;
