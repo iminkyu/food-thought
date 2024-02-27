@@ -9,10 +9,12 @@ import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -22,46 +24,72 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    // 게시물 작성
-    public ResponseDto createBoard(CreateBoardRequestDto create, User user) {
-        //리턴타입                  //메소드      //메소드실행하기위해 받아온 값 (컨트롤러한테 받아온값)
-        //1. 게시물을 저장
-        //유저한테 받은 게시물의 입력값  + 로그인한유저정보를 합쳐서 게시물을 작성
-        Board board = Board.builder().users(user).booktitle(create.getBooktitle()).bookauthor(create.getBookauthor())
-                .bookpublisher(create.getBookpublisher()).bookcategory(create.getBookcategory()).bookimage(create.getBookimage())
-                .contents(create.getContents()).build();
-        //작성된 게시물 저장
-        boardRepository.save(board);
 
-        //2. 잘 작성됬다고 알려줄건지 << 이용자/포스트맨 각 1씩
-        // 이용자한테전달할값 1 / postman전달할값 1
+    public ResponseDto createBoard(CreateBoardRequestDto create, User user) {
+
+        Board register = Board.builder().contents(create.getContents()).users(user).build();
+
+        boardRepository.save(register);
+
         return ResponseDto.success(HttpStatus.CREATED.value(), "게시물이 작성되었습니다.");
     }
 
-    // 게시물 전체 조회
-    public GetBoardResponseDto totalInquiry(GetBoardResponseDto total, User user) {
-        Board board = boardRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException());
+
+    public List<GetBoardResponseDto> totalInquiry(GetBoardResponseDto total, User user) {
+
+
+
+
+
+
+
+
+//        게시판은 게시글의 목록과 게시글의 상세를 볼 수 있어야 함
+//        게시글 목록은 제목과 작성자 작성 시간의 간략화된 정보를 보여 줌
+//        게시글 상세는 제목, 작성자, 내용, 작성시간, 수정 시간 등의 상세한 정보를 보여줘야 함
         return null;
     }
 
-    // 게시물 단건 조회
-    public GetBoardResponseDto oneInquiry(Long boardid, GetBoardResponseDto one) {
+
+    public GetBoardResponseDto oneInquiry(Long boardId, GetBoardResponseDto one, User user) {
+        Board board = boardRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException());
+//        게시판은 게시글의 목록과 게시글의 상세를 볼 수 있어야 함
+//        게시글 목록은 제목과 작성자 작성 시간의 간략화된 정보를 보여 줌
+//        게시글 상세는 제목, 작성자, 내용, 작성시간, 수정 시간 등의 상세한 정보를 보여줘야 함
+
         return null;
     }
 
-    // 게시물 수정(JWTToken)
+
     @Transactional
-    public Board updateBoard(Long boardid, UpdateBoardRequestDto update, User user) {
-        Board board = boardRepository.findById(boardid).orElseThrow(
-                () -> new NoSuchElementException("해당 ID를 찾을 수 없습니다."));
+    public ResponseDto updateBoard(Long boardId, UpdateBoardRequestDto update, User user) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new NoSuchElementException("해당 ID의 게시물을 찾을 수 없습니다."));
 
-        return null;
+        if(!board.getUsers().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("게시물을 수정할 수 있는 권한이 없습니다.");
+        }
+
+//        게시판의 게시글은 수정이 가능해야 함
+//        게시글 수정 시 제목과 내용이 수정 가능하고, 수정 시간이 기록되어야 함
+//        게시글의 제목과 내용은 최소 n글자 이상이어야 함
+//        게시글 수정은 작성자만 가능해야 함
+
+        return ResponseDto.success(HttpStatus.CREATED.value(), "게시물이 수정되었습니다.");
     }
 
-    // 게시물 삭제(JWTToken)
+
     @Transactional
-    public ResponseDto deleteBoard(ResponseDto delete) {
-        return null;
+    public ResponseDto deleteBoard(Long boardId, ResponseDto delete, User user) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () ->new IllegalArgumentException("해당 ID의 게시물을 찾을 수 없습니다."));
+
+        if(!board.getUsers().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("게시물을 삭제할 수 있는 권한이 없습니다.");
+        }
+
+        boardRepository.deleteById(boardId);
+        return ResponseDto.success(HttpStatus.NO_CONTENT.value(), "게시물이 삭제되었습니다.");
     }
 
 
