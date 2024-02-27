@@ -1,28 +1,23 @@
 package com.example.foodthought.entity;
 
-
+import com.example.foodthought.dto.book.UpdateBookRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
 @Entity
+@Getter
 @Table(name = "books")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Book {
+public class Book extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToMany
-    private List<Board> boards = new ArrayList<>();
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -38,4 +33,12 @@ public class Book {
 
     @Column(nullable = false, length = 255)
     private String category;
+
+    public void update(UpdateBookRequestDto dto, String image) {
+        if(!dto.getTitle().isEmpty())   this.title = dto.getTitle();
+        if(!dto.getAuthor().isEmpty())   this.author = dto.getAuthor();
+        if(!dto.getPublisher().isEmpty())   this.publisher = dto.getPublisher();
+        if(!dto.getCategory().isEmpty())   this.category = dto.getCategory();
+        if(!image.isEmpty())    this.image = image;
+    }
 }

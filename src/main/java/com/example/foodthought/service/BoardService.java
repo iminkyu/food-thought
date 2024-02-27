@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -23,7 +25,7 @@ public class BoardService {
     @Transactional
     public void createBoard(CreateBoardRequestDto create, User user) {
 
-        Board register = Board.builder().contents(create.getContents()).users(user).build();
+        Board register = Board.builder().contents(create.getContents()).user(user).build();
 
         boardRepository.save(register);
     }
@@ -39,7 +41,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(()
                 -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
-        return new GetBoardResponseDto();
+        return null;
 
     }
 
@@ -49,7 +51,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 ID의 게시물을 찾을 수 없습니다."));
 
-        if (!board.getUsers().getId().equals(user.getId())) {
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("게시물을 수정할 수 있는 권한이 없습니다.");
         }
     }
@@ -60,7 +62,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 ID의 게시물을 찾을 수 없습니다."));
 
-        if (!board.getUsers().getId().equals(user.getId())) {
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("게시물을 삭제할 수 있는 권한이 없습니다.");
         }
         boardRepository.deleteById(boardId);

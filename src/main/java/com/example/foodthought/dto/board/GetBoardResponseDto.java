@@ -4,8 +4,6 @@ package com.example.foodthought.dto.board;
 import lombok.*;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class GetBoardResponseDto {
     private String title;

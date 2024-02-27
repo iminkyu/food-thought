@@ -4,8 +4,6 @@ package com.example.foodthought.dto.board;
 import lombok.*;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class UpdateBoardRequestDto {
     private String title;
@@ -14,4 +12,5 @@ public class UpdateBoardRequestDto {
     private String image;
     private String category;
     private String contents;
+
 }

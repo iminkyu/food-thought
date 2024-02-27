@@ -20,13 +20,14 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne
     @JoinColumn(name = "users_id")
-    private User users;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "books_id")
-    private Book books;
+    private Book book;
 
     @Column(nullable = false, length = 65535)
     private String contents;
