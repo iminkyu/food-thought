@@ -6,28 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-
 @Entity
 @Getter
-@Table(name = "boards")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+@Table(name = "likes")
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private User users;
 
     @ManyToOne
-    @JoinColumn(name = "books_id")
-    private Book books;
+    @JoinColumn(name = "boards_id", nullable = false)
+    private Board board;
 
-    @Column(nullable = false, length = 65535)
-    private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private User user;
+
 }
