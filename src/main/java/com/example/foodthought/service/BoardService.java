@@ -1,6 +1,5 @@
 package com.example.foodthought.service;
 
-import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
 import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
@@ -9,11 +8,8 @@ import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +28,8 @@ public class BoardService {
 
 
     public GetBoardResponseDto getAllBoards() {
-        boardRepository.findAll();
-       return null;
+      return null;
+
     }
 
 
