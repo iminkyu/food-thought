@@ -43,8 +43,8 @@ public class LikeService {
         List<LikeTopResponseDto> responseDtos = new ArrayList<>();
         for (Object[] objects : top3) {
             Board board = (Board) objects[0];
-            LikeTopResponseDto dto = buildLikeTop(board,(Long)objects[1]);
-            responseDtos.add(dto);
+        //    LikeTopResponseDto dto = buildLikeTop(board,(Long)objects[1]);
+        //    responseDtos.add(dto);
         }
         return ResponseDto.success(HttpStatus.CREATED.value(), responseDtos);
     }
@@ -62,16 +62,16 @@ public class LikeService {
     }
 
 
-    //LikeTopResponseDto 생성
-    private LikeTopResponseDto buildLikeTop(Board board ,Long countLikes){
-        return LikeTopResponseDto.builder().boardId(board.getId())
-                .booktitle(board.getBooktitle())
-                .bookauthor(board.getBookauthor())
-                .bookpublisher(board.getBookpublisher())
-                .bookcategory(board.getBookcategory())
-                .bookimage(board.getBookimage())
-                .username(board.getUsers().getUsername())
-                .contents(board.getContents())
-                .countLikes(countLikes).build();
-    }
+//    LikeTopResponseDto 생성
+//    private LikeTopResponseDto buildLikeTop(Board board ,Long countLikes){
+//        return LikeTopResponseDto.builder().boardId(board.getId())
+//                .booktitle(board.getBooktitle())
+//                .bookauthor(board.getBookauthor())
+//                .bookpublisher(board.getBookpublisher())
+//                .bookcategory(board.getBookcategory())
+//                .bookimage(board.getBookimage())
+//                .username(board.getUsers().getUsername())
+//                .contents(board.getContents())
+//                .countLikes(countLikes).build();
+//    }
 }

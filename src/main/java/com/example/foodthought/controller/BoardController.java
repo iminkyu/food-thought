@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,43 +27,39 @@ public class BoardController {
     public ResponseEntity<ResponseDto> createBoard(@RequestBody CreateBoardRequestDto create,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(create, userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
 
     @GetMapping
-    public ResponseEntity<GetBoardResponseDto> totalInquiry(GetBoardResponseDto total,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<GetBoardResponseDto> getAllBoards() {
 
-        return ResponseEntity.status(HttpStatus.OK).body(boardService.totalInquiry(total, userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getAllBoards());
     }
 
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<GetBoardResponseDto> oneInquiry(@PathVariable Long boardId,
-                                                          GetBoardResponseDto one,
-                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<GetBoardResponseDto> getBoard(@PathVariable Long boardId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(boardService.oneInquiry(boardId, one, userDetails.getUser()));
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId));
     }
 
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<ResponseDto> updateBoard(@PathVariable Long boardId,
-                                                   @RequestBody UpdateBoardRequestDto update,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
+                                            @RequestBody UpdateBoardRequestDto update,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(boardService.updateBoard(boardId, update, userDetails.getUser()));
+     return null;
     }
 
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<ResponseDto> deleteBoard(@PathVariable Long boardId, ResponseDto delete,
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(boardService.deleteBoard(boardId, delete, userDetails.getUser()));
+        boardService.deleteBoard(boardId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
