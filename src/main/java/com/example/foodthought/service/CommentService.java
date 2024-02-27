@@ -24,18 +24,26 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-
     // 댓글 생성
-    @Transactional
-    public ResponseDto createComment(Long boardId, CommentRequest request, User user) {
+    public ResponseDto createComment(Long boardId, Long parentCommentId, String contents, User user) {
         Board board = findBoard(boardId);
-        User findUser = board.getUsers();
-        commentRepository.save(new Comment(request, board, findUser));
-        return ResponseDto.success(HttpStatus.CREATED.value());
+        Comment parentComment = null;
+        if (parentCommentId != null) {
+            parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다."));
+        }
+        Comment comment = Comment.builder()
+                .contents(contents)
+                .board(board)
+                .user(user)
+                .parentComment(parentComment)
+                .build();
+         commentRepository.save(comment);
+         return ResponseDto.success(HttpStatus.CREATED.value());
     }
 
 
-    // 댓글 조회
+    // 댓글, 대댓글 조회
     public List<CommentResponse> getComment(Long boardId) {
         findBoard(boardId);
         List<Comment> commentList = commentRepository.findByBoardId(boardId);
@@ -46,7 +54,7 @@ public class CommentService {
     // 댓글 수정
     @Transactional
     public ResponseDto updateComment(Long boardId, Long commentId, CommentRequest commentRequest, User user) {
-        Board board = findBoard(boardId);
+        findBoard(boardId);
         User findUser = findUser(user);
         Comment comment = findComment(commentId);
 
@@ -58,10 +66,28 @@ public class CommentService {
     }
 
 
+    // 대댓글 수정
+    @Transactional
+    public ResponseDto updateReply(Long boardId, Long parentCommentId, Long replyId, CommentRequest commentRequest, User user) {
+        Comment reply = commentRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("대댓글을 찾을 수 없습니다."));
+
+        if (!reply.getParentComment().getCommentId().equals(parentCommentId)  || !reply.getBoard().getId().equals(boardId)) {
+            throw new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다.");
+        }
+
+        if (!reply.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
+        }
+        reply.updateComment(commentRequest);
+        return ResponseDto.success(HttpStatus.CREATED.value());
+    }
+
+
     // 댓글 삭제
     @Transactional
     public void deleteComment(Long boardId, Long commentId, User user) {
-        Board board = findBoard(boardId);
+        findBoard(boardId);
         User findUser = findUser(user);
         Comment comment = findComment(commentId);
 
@@ -72,13 +98,42 @@ public class CommentService {
     }
 
 
+
+    // 대댓글 삭제
+    @Transactional
+    public void deleteReply(Long boardId, Long parentCommentId, Long replyId, User user) {
+        Comment reply = commentRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다."));
+
+        if (!reply.getParentComment().getCommentId().equals(parentCommentId)  || !reply.getBoard().getId().equals(boardId)) {
+            throw new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다.");
+        }
+
+        if (!reply.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
+        }
+        commentRepository.delete(reply);
+    }
+
+
     // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환
     private List<CommentResponse> convertToDtoList(List<Comment> commentList) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (Comment comment : commentList) {
-            commentResponseList.add(new CommentResponse(comment));
+            CommentResponse commentResponse = new CommentResponse(comment);
+            addRepliesToResponse(comment, commentResponse);
+            commentResponseList.add(commentResponse);
         }
         return commentResponseList;
+    }
+
+
+    private void addRepliesToResponse(Comment comment, CommentResponse commentResponse) {
+        for (Comment reply : comment.getReplies()) {
+            CommentResponse replyResponse = new CommentResponse(reply);
+            commentResponse.addReply(replyResponse);
+            addRepliesToResponse(reply, replyResponse);
+        }
     }
 
 
@@ -97,5 +152,4 @@ public class CommentService {
     private User findUser(User user) {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
     }
-
 }
