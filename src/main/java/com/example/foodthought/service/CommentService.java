@@ -62,15 +62,14 @@ public class CommentService {
             throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
         }
         comment.updateComment(commentRequest);
-        return ResponseDto.success(HttpStatus.CREATED.value());
+        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
     // 대댓글 수정
     @Transactional
     public ResponseDto updateReply(Long boardId, Long parentCommentId, Long replyId, CommentRequest commentRequest, User user) {
-        Comment reply = commentRepository.findById(replyId)
-                .orElseThrow(() -> new IllegalArgumentException("대댓글을 찾을 수 없습니다."));
+        Comment reply = findReply(replyId);
 
         if (!reply.getParentComment().getCommentId().equals(parentCommentId)  || !reply.getBoard().getId().equals(boardId)) {
             throw new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다.");
@@ -80,7 +79,7 @@ public class CommentService {
             throw new IllegalArgumentException("작성자만 수정 할 수 있습니다.");
         }
         reply.updateComment(commentRequest);
-        return ResponseDto.success(HttpStatus.CREATED.value());
+        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
@@ -102,10 +101,9 @@ public class CommentService {
     // 대댓글 삭제
     @Transactional
     public void deleteReply(Long boardId, Long parentCommentId, Long replyId, User user) {
-        Comment reply = commentRepository.findById(replyId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다."));
+        Comment reply = findReply(replyId);
 
-        if (!reply.getParentComment().getCommentId().equals(parentCommentId)  || !reply.getBoard().getId().equals(boardId)) {
+        if (!reply.getParentComment().getCommentId().equals(parentCommentId) || !reply.getBoard().getId().equals(boardId)) {
             throw new IllegalArgumentException("유효하지 않은 게시글 또는 댓글 입니다.");
         }
 
@@ -149,7 +147,12 @@ public class CommentService {
     }
 
 
+    // 유저 찾기
     private User findUser(User user) {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
+    }
+
+    private Comment findReply(Long replyId) {
+        return commentRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("없는 대댓글입니다."));
     }
 }

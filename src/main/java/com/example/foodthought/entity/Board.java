@@ -32,7 +32,7 @@ public class Board {
 //    private List<Like> likes;
 
     @Column(nullable = false, length = 255)
-    private String bookitle;
+    private String booktitle;
 
     @Column(nullable = false, length = 255)
     private String bookauthor;
