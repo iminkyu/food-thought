@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용
                         .requestMatchers("/auth/logout").authenticated()// 설정
                         .requestMatchers("/auth/**","/users/signup").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
 
