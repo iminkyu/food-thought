@@ -1,6 +1,7 @@
 package com.example.foodthought.entity;
 
 import com.example.foodthought.dto.user.CreateUserDto;
+import com.example.foodthought.dto.user.UpdateUserDto;
 import com.example.foodthought.entity.user.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,6 +47,11 @@ public class User extends Timestamped{
         this.userPhoto = fileName;
     }
 
+    public void updateUser(UpdateUserDto updateUserDto, String fileUrl){
+        if(!Objects.isNull(updateUserDto.getUsername())) this.username = updateUserDto.getUsername();
+        if(!Objects.isNull(updateUserDto.getIntro())) this.intro = updateUserDto.getIntro();
+        if(!fileUrl.isEmpty()) this.userPhoto = fileUrl;
+    }
 
     @Override
     public boolean equals(Object o) {
