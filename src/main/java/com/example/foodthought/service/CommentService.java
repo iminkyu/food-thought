@@ -5,10 +5,13 @@ import com.example.foodthought.dto.comment.CommentRequest;
 import com.example.foodthought.dto.comment.CommentResponse;
 import com.example.foodthought.entity.Board;
 import com.example.foodthought.entity.Comment;
+import com.example.foodthought.entity.Status;
 import com.example.foodthought.entity.User;
+import com.example.foodthought.entity.user.UserRoleEnum;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.CommentRepository;
 import com.example.foodthought.repository.UserRepository;
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -114,6 +117,29 @@ public class CommentService {
     }
 
 
+    // admin 댓글 block
+    public void blockComment(Long boardId, Long commentId, User user) {
+        if ("User".equals(user.getRole())) {
+            throw new IllegalArgumentException("관리자 권한이 없습니다.");
+        }
+        findBoard(boardId);
+        Comment comment = findComment(commentId);
+        comment.block();
+        commentRepository.save(comment);
+    }
+
+
+    // admin 댓글 삭제
+    public void deleteAdminComment(Long boardId, Long commentId, User user) {
+        if ("User".equals(user.getRole())) {
+            throw new IllegalArgumentException("관리자 권한이 없습니다.");
+        }
+        findBoard(boardId);
+        Comment comment = findComment(commentId);
+        commentRepository.delete(comment);
+    }
+
+
     // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환
     private List<CommentResponse> convertToDtoList(List<Comment> commentList) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
@@ -124,6 +150,7 @@ public class CommentService {
         }
         return commentResponseList;
     }
+
 
 
     private void addRepliesToResponse(Comment comment, CommentResponse commentResponse) {
