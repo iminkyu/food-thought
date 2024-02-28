@@ -1,5 +1,7 @@
 package com.example.foodthought.entity;
 
+import com.example.foodthought.dto.board.UpdateBoardRequestDto;
+import com.example.foodthought.dto.book.UpdateBookRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +32,10 @@ public class Board {
 
     @Column(nullable = false, length = 65535)
     private String contents;
+
+    public void update(UpdateBoardRequestDto dto, Book book, User user) {
+        this.user = user;
+        this.book = book;
+        if(!dto.getContents().isEmpty()) this.contents = dto.getContents();
+    }
 }

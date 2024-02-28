@@ -20,46 +20,47 @@ public class BoardController {
     private final BoardService boardService;
 
 
+    //게시물 생성
     @PostMapping
     public ResponseEntity<ResponseDto> createBoard(@RequestBody CreateBoardRequestDto create,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(createBoard(create.getContents(), create.getBook()),userDetails.getUser());
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(create, userDetails.getUser()));
     }
 
 
+    //전체 게시물 조회
     @GetMapping
-    public ResponseEntity<GetBoardResponseDto> getAllBoards() {
-
-        boardService.getAllBoards();
-//        return ResponseEntity.status(HttpStatus.OK).;
-        return null;
+    public ResponseEntity<ResponseDto> getAllBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createAt") String sort,
+            @RequestParam(defaultValue = "false") boolean isASC
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getAllBoards(page, size, sort, isASC));
     }
 
 
+    //게시물 단건 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity<GetBoardResponseDto> getBoard(@PathVariable Long boardId) {
-
-//        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId));
-        return null;
+    public ResponseEntity<ResponseDto> getBoard(@PathVariable Long boardId) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId));
     }
 
 
+    //게시물 수정
     @PutMapping("/{boardId}")
     public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
                                             @RequestBody UpdateBoardRequestDto update,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        return null;
+        boardService.updateBoard(boardId, update, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
+    //게시물 삭제
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
         boardService.deleteBoard(boardId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

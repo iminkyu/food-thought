@@ -15,10 +15,10 @@ public class AdminController {
     private final AdminService adminService;
     //user
 
-    @GetMapping()
-    public ResponseEntity test(){
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping()
+//    public ResponseEntity test(){
+//        return ResponseEntity.ok().build();
+//    }
     //board
 
     //comment
