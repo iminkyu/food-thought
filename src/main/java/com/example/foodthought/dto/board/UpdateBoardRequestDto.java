@@ -12,5 +12,4 @@ public class UpdateBoardRequestDto {
     private String image;
     private String category;
     private String contents;
-
 }

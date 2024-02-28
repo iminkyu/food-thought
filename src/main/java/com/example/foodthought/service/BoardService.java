@@ -8,9 +8,11 @@ import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+
     @Transactional
     public void createBoard(CreateBoardRequestDto create, User user) {
 
@@ -29,23 +32,31 @@ public class BoardService {
     }
 
 
-    public GetBoardResponseDto getAllBoards() {
-        // title, author, publisher, image, category, contents
+    public List<GetBoardResponseDto> getAllBoards() {
+        List<Board> boardList = boardRepository.findAll();
 
-      return null;
+        List<GetBoardResponseDto> getBoardResponseDtoList = new ArrayList<>();
 
+        if (boardList.isEmpty()) {
+            throw new IllegalArgumentException("게시물을 확인할 수 없습니다.");
+        }
+        return getBoardResponseDtoList;
     }
 
 
-    public GetBoardResponseDto getBoard(Long boardId) {
+    public List<GetBoardResponseDto> getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()
                 -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
-        return null;
+        List<GetBoardResponseDto> getBoard = new ArrayList<>();
+
+        if (!board.getUser().getId().equals(boardId)) {
+            throw new IllegalArgumentException("사용자의 id와 게시물의 id가 일치하지 않습니다.");
+        }
+
+        return getBoard;
 
     }
-
-    //private List<>
 
 
     @Transactional
@@ -56,6 +67,11 @@ public class BoardService {
         if (!board.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("게시물을 수정할 수 있는 권한이 없습니다.");
         }
+        if (!board.getContents().equals(update.getContents())) {
+            throw new IllegalArgumentException("게시물 수정할 수 없습니다.");
+
+        }
+        boardRepository.save(board);
     }
 
 
