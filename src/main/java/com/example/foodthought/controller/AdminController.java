@@ -2,10 +2,9 @@ package com.example.foodthought.controller;
 
 import com.example.foodthought.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,9 +14,20 @@ public class AdminController {
     private final AdminService adminService;
     //user
 
-    @GetMapping()
-    public ResponseEntity test(){
-        return ResponseEntity.ok().build();
+    @GetMapping("/users")
+    public ResponseEntity getUsers(){
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findAllUser());
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity getUser(@PathVariable Long userId){
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.findUser(userId));
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity deleteUser(@PathVariable Long userId){
+        adminService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     //board
 
