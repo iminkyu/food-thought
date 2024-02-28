@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+public class Board extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,16 +27,24 @@ public class Board {
     @JoinColumn(name = "users_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "books_id")
-    private Book book;
+
+    private Long bookId;
+
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Like> likes = new ArrayList<>();
+
 
     @Column(nullable = false, length = 65535)
     private String contents;
 
-    public void update(UpdateBoardRequestDto dto, Book book, User user) {
+    public void update(UpdateBoardRequestDto dto, User user) {
         this.user = user;
-        this.book = book;
+        this.bookId = dto.getBookId();
         if(!dto.getContents().isEmpty()) this.contents = dto.getContents();
     }
+
+//    public void deleteUpdate() {
+//        this.status = block;
+//    }
 }

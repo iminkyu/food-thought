@@ -2,11 +2,11 @@ package com.example.foodthought.controller;
 
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
-import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
 import com.example.foodthought.security.UserDetailsImpl;
 import com.example.foodthought.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
