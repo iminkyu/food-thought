@@ -25,7 +25,7 @@ public class LikeService {
 
 
     //좋아요/좋아요 취소
-    public ResponseDto toggleLike(User user, Long boardId) {
+    public void toggleLike(User user, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("해당하는 게시물이 없습니다.")
         );
@@ -36,11 +36,10 @@ public class LikeService {
             Like like = buildLike(user, board);
             likeRepository.save(like);
         }
-        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
-    public ResponseDto findBoardByLikeTop3() {
+    public ResponseDto<List<LikeTopResponseDto>> findBoardByLikeTop3() {
         List<Object[]> top3 = likeRepository.findBoardByLikeTop3();
 
         List<LikeTopResponseDto> responseDtos = new ArrayList<>();
