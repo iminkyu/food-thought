@@ -26,17 +26,17 @@ public class AdminController {
     private final AdminService adminService;
     //user
 
-    @GetMapping("/users")
+    @GetMapping("/api/users")
     public ResponseEntity getUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findAllUser());
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/api/users/{userId}")
     public ResponseEntity getUser(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.findUser(userId));
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/api/users/{userId}")
     public ResponseEntity deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
