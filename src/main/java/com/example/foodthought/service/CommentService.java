@@ -11,7 +11,6 @@ import com.example.foodthought.entity.user.UserRoleEnum;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.CommentRepository;
 import com.example.foodthought.repository.UserRepository;
-import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -119,19 +118,18 @@ public class CommentService {
 
     // admin 댓글 block
     public void blockComment(Long boardId, Long commentId, User user) {
-        if ("User".equals(user.getRole())) {
+        if (UserRoleEnum.USER.equals(user.getRole())) {
             throw new IllegalArgumentException("관리자 권한이 없습니다.");
         }
         findBoard(boardId);
         Comment comment = findComment(commentId);
         comment.block();
-        commentRepository.save(comment);
     }
 
 
     // admin 댓글 삭제
     public void deleteAdminComment(Long boardId, Long commentId, User user) {
-        if ("User".equals(user.getRole())) {
+        if (UserRoleEnum.USER.equals(user.getRole())) {
             throw new IllegalArgumentException("관리자 권한이 없습니다.");
         }
         findBoard(boardId);
@@ -140,11 +138,34 @@ public class CommentService {
     }
 
 
-    // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환
+    // admin 댓글 조회 (block 된 게시물까지 전부 출력)
+    public List<CommentResponse> getAllComment(Long boardId) {
+        findBoard(boardId);
+        List<Comment> commentList = commentRepository.findByBoardId(boardId);
+        return AdminConvertToDtoList(commentList);
+    }
+
+
+    // admin 조회 로직 (block 된 게시물까지 전부 출력)
+    private List<CommentResponse> AdminConvertToDtoList(List<Comment> commentList) {
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentResponse commentResponse = new CommentResponse(comment);
+            addRepliesToResponse(comment, commentResponse);
+            commentResponseList.add(commentResponse);
+        }
+        return commentResponseList;
+    }
+
+
+    // Comment 객체를 CommentResponse 객체로 변환 후 리스트로 반환, block 게시물 block 처리
     private List<CommentResponse> convertToDtoList(List<Comment> commentList) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (Comment comment : commentList) {
             CommentResponse commentResponse = new CommentResponse(comment);
+            if(comment.getStatus() == Status.Blocked) {
+                throw new IllegalArgumentException("Block 된 게시물 입니다");
+            }
             addRepliesToResponse(comment, commentResponse);
             commentResponseList.add(commentResponse);
         }
@@ -179,6 +200,8 @@ public class CommentService {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("없는 사용자입니다."));
     }
 
+
+    // 대댓글 찾기
     private Comment findReply(Long replyId) {
         return commentRepository.findById(replyId).orElseThrow(() -> new IllegalArgumentException("없는 대댓글입니다."));
     }
