@@ -83,6 +83,32 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+    @Transactional
+    public void deleteAdminBoard(Long boardId) {
+        Board board = findBoard(boardId);
+        List<Like> deleteLike = likeRepository.findLikesByBoard_Id(boardId);
+        likeRepository.deleteAll(deleteLike);
+        List<Comment> deleteComment = commentRepository.findCommentsByBoard_Id(boardId);
+        commentRepository.deleteAll(deleteComment);
+        boardRepository.delete(board);
+    }
+
+    @Transactional
+    public void blockBoard(Long boardId) {
+        Board board = findBoard(boardId);
+        board.block();
+    }
+
+
+    public List<GetBoardResponseDto> getAdminAllBoard(int page, int size, String sort, boolean isAsc) {
+        if (boardRepository.findAll().isEmpty()) {
+            throw new IllegalArgumentException("등록된 게시물이 없습니다.");
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
+        Page<Board> boards = boardRepository.findAll(pageRequest);
+        return adminConvertToDtoList(boards);
+    }
+
 
     //게시물 찾기
     private Board findBoard(Long boardId) {
@@ -122,6 +148,26 @@ public class BoardService {
         List<GetBoardResponseDto> getBoardResponseDtos = new ArrayList<>();
         for (Board board : boards) {
             Book book = findBook(board.getBookId());
+            if(board.getStatus() == Status.Blocked) {
+                throw new IllegalArgumentException("Block 된 게시물 입니다");
+            }
+            GetBoardResponseDto dto = GetBoardResponseDto.builder()
+                    .title(book.getTitle())
+                    .author(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    .image(book.getImage())
+                    .category(book.getCategory())
+                    .contents(board.getContents()).build();
+            getBoardResponseDtos.add(dto);
+        }
+        return getBoardResponseDtos;
+    }
+
+
+    private List<GetBoardResponseDto> adminConvertToDtoList(Page<Board> boards) {
+        List<GetBoardResponseDto> getBoardResponseDtos = new ArrayList<>();
+        for (Board board : boards) {
+            Book book = findBook(board.getBookId());
             GetBoardResponseDto dto = GetBoardResponseDto.builder()
                     .title(book.getTitle())
                     .author(book.getAuthor())
@@ -142,5 +188,4 @@ public class BoardService {
                 .user(user)
                 .contents(dto.getContents()).build();
     }
-
 }

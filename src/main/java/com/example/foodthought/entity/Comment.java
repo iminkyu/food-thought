@@ -24,6 +24,8 @@ public class Comment extends Timestamped {
     @Lob
     private String contents;
 
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.Post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id", nullable = false)
@@ -47,6 +49,9 @@ public class Comment extends Timestamped {
         this.user = user;
     }
 
+    public void block() {
+        this.status = Status.Blocked;
+    }
 
     public void updateComment(CommentRequest commentRequest) {
         this.contents = commentRequest.getContents();

@@ -30,6 +30,9 @@ public class Board extends Timestamped{
 
     private Long bookId;
 
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.Post;
+
 
     @Column(nullable = false, length = 65535)
     private String contents;
@@ -38,6 +41,10 @@ public class Board extends Timestamped{
         this.user = user;
         this.bookId = dto.getBookId();
         if(!dto.getContents().isEmpty()) this.contents = dto.getContents();
+    }
+
+    public void block() {
+        this.status = Status.Blocked;
     }
 
 }
