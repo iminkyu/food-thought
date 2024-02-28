@@ -31,10 +31,6 @@ public class Board extends Timestamped{
     private Long bookId;
 
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Like> likes = new ArrayList<>();
-
-
     @Column(nullable = false, length = 65535)
     private String contents;
 
@@ -44,7 +40,4 @@ public class Board extends Timestamped{
         if(!dto.getContents().isEmpty()) this.contents = dto.getContents();
     }
 
-//    public void deleteUpdate() {
-//        this.status = block;
-//    }
 }

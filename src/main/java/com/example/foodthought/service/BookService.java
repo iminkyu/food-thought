@@ -28,7 +28,7 @@ public class BookService {
 
 
     //책 전체 조회
-    public ResponseDto getAllBook(int page, int size, String sort, boolean isAsc, String title) {
+    public ResponseDto<List<GetBookResponseDto>> getAllBook(int page, int size, String sort, boolean isAsc, String title) {
         title = title.trim();
         if(title.isEmpty()){
             if (bookRepository.findAllByTitleContains(title).isEmpty()) {
@@ -46,14 +46,14 @@ public class BookService {
 
 
     //책 단권 조회
-    public ResponseDto getBook(Long bookId) {
+    public ResponseDto<GetBookResponseDto> getBook(Long bookId) {
         return ResponseDto.success(200, convertToDto(findBook(bookId)));
     }
 
 
     //책 입력
     @Transactional
-    public ResponseDto createBook(CreateBookRequestDto createBookRequestDto, MultipartFile file) throws IOException {
+    public ResponseDto<Void> createBook(CreateBookRequestDto createBookRequestDto, MultipartFile file) throws IOException {
         bookRepository.save(convertToBook(createBookRequestDto, convertToString(file)));
         return ResponseDto.success(201);
     }

@@ -11,4 +11,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     @Query(value = "SELECT l.board, COUNT(l) FROM Like l GROUP BY l.board ORDER BY COUNT(l) DESC LIMIT 3")
     List<Object[]> findBoardByLikeTop3();
+
+    List<Like> findLikesByBoard_Id(Long boardId);
 }

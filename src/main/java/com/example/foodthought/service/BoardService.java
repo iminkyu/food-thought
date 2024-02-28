@@ -4,11 +4,11 @@ import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
 import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
-import com.example.foodthought.entity.Board;
-import com.example.foodthought.entity.Book;
-import com.example.foodthought.entity.User;
+import com.example.foodthought.entity.*;
 import com.example.foodthought.repository.BoardRepository;
 import com.example.foodthought.repository.BookRepository;
+import com.example.foodthought.repository.CommentRepository;
+import com.example.foodthought.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +25,13 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BookRepository bookRepository;
+    private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
 
     //게시물 생성
     @Transactional
-    public ResponseDto createBoard(CreateBoardRequestDto create, User user) {
+    public ResponseDto<Void> createBoard(CreateBoardRequestDto create, User user) {
         Book book = findBook(create.getBookId());
         boardRepository.save(convertToBoard(create, user));
         return ResponseDto.success(201);
@@ -37,7 +39,7 @@ public class BoardService {
 
 
     //게시물 모두조회
-    public ResponseDto getAllBoards(int page, int size, String sort, boolean isAsc) {
+    public ResponseDto<List<GetBoardResponseDto>> getAllBoards(int page, int size, String sort, boolean isAsc) {
         if (boardRepository.findAll().isEmpty()) {
             throw new IllegalArgumentException("등록된 게시물이 없습니다.");
         }
@@ -48,7 +50,7 @@ public class BoardService {
 
 
     //게시물 단건조회
-    public ResponseDto getBoard(Long boardId) {
+    public ResponseDto<GetBoardResponseDto> getBoard(Long boardId) {
         Board board = findBoard(boardId);
         return ResponseDto.success(200, convertToDto(board));
     }
@@ -74,24 +76,19 @@ public class BoardService {
         if (!isMyBoard(board, user)) {
             throw new IllegalArgumentException("게시물을 삭제할 수 있는 권한이 없습니다.");
         }
+        List<Like> deleteLike = likeRepository.findLikesByBoard_Id(boardId);
+        likeRepository.deleteAll(deleteLike);
+        List<Comment> deleteComment = commentRepository.findCommentsByBoard_Id(boardId);
+        commentRepository.deleteAll(deleteComment);
         boardRepository.delete(board);
-//        board.deleteUpdate();
-//        List<Comment> delcomment = commentRepository.찾아와;
-//        for (Comment comment : delcomment) {
-//            comment.deleteUpdate();
-//        }
     }
 
 
     //게시물 찾기
     private Board findBoard(Long boardId) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        return boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다."));
-//        if(board.status(block)){
-//            throw new IllegalArgumentException("삭제된 게시물입니다.");
-//        }
-        return board;
     }
 
 
