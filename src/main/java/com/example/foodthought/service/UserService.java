@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -53,5 +54,21 @@ public class UserService {
         String fileUrl = storageService.uploadFile(file);
 
         findUser.updateUser(updateUserDto,fileUrl);
+    }
+
+    public List<User> findAllUser(){
+        return userRepository.findAll();
+    }
+
+    public User findUser(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new IllegalArgumentException("존재 하지 않은 유저입니다"));
+    }
+
+    public void deleteUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new IllegalArgumentException("존재 하지 않은 유저입니다"));
+
+        userRepository.delete(user);
     }
 }

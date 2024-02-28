@@ -29,7 +29,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(createUserDto,file));
     }
 
-
     @PutMapping("/{userId}")
     public ResponseEntity updateUser(@PathVariable Long userId,
                                      @RequestPart @Valid UpdateUserDto updateUserDto,
