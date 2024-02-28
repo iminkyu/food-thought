@@ -27,9 +27,10 @@ public class BookController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createAt") String sort,
-            @RequestParam(defaultValue = "false") boolean isASC
+            @RequestParam(defaultValue = "false") boolean isASC,
+            @RequestParam(required = false, defaultValue = "") String title //
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBook(page, size, sort, isASC));
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.getAllBook(page, size, sort, isASC, title));
     }
 
 
