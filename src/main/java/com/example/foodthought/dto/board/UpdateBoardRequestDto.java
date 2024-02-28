@@ -3,14 +3,13 @@ package com.example.foodthought.dto.board;
 
 import lombok.*;
 
-import java.awt.print.Book;
-
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class UpdateBoardRequestDto {
-    private Book book;
+    private String title;
+    private String author;
+    private String publisher;
+    private String image;
+    private String category;
     private String contents;
 }

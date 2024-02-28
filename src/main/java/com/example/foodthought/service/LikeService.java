@@ -70,7 +70,7 @@ public class LikeService {
                 .bookpublisher(board.getBook().getPublisher())
                 .bookcategory(board.getBook().getCategory())
                 .bookimage(board.getBook().getImage())
-                .username(board.getUsers().getUsername())
+                .username(board.getUser().getUsername())
                 .contents(board.getContents())
                 .countLikes(countLikes).build();
     }

@@ -6,7 +6,6 @@ import java.awt.print.Book;
 
 @AllArgsConstructor
 @Getter
-@Setter
 @NoArgsConstructor
 @Builder
 public class CreateBoardRequestDto {
