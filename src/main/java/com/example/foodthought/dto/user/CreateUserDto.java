@@ -1,5 +1,6 @@
 package com.example.foodthought.dto.user;
 
+import com.example.foodthought.entity.user.UserRoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class CreateUserDto {
     private String username;
 
     private String intro;
+
+    private UserRoleEnum role;
 }

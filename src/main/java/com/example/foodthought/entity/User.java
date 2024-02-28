@@ -1,6 +1,7 @@
 package com.example.foodthought.entity;
 
 import com.example.foodthought.dto.user.CreateUserDto;
+import com.example.foodthought.entity.user.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,12 +34,15 @@ public class User extends Timestamped{
     @Column()
     private String userPhoto;
 
+    @Enumerated(EnumType.STRING)
+    private UserRoleEnum role = UserRoleEnum.USER;
 
     public User(CreateUserDto createUserDto, String passwordEncryption, String fileName){
         this.userId = createUserDto.getUserId();
         this.username = createUserDto.getUsername();
         this.password = passwordEncryption;
         this.intro = createUserDto.getIntro();
+        this.role = createUserDto.getRole()==null ? UserRoleEnum.USER : createUserDto.getRole();
         this.userPhoto = fileName;
     }
 
