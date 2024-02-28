@@ -2,6 +2,7 @@ package com.example.foodthought.service;
 
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.user.CreateUserDto;
+import com.example.foodthought.dto.user.UpdateUserDto;
 import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.UserRepository;
 import com.example.foodthought.util.StorageService;
@@ -38,5 +39,19 @@ public class UserService {
         userRepository.save(user);
 
         return ResponseDto.success(HttpStatus.CREATED.value(),"회원 가입 성공");
+    }
+
+    @Transactional
+    public void updateUser(Long userId,UpdateUserDto updateUserDto,MultipartFile file,User user) throws IOException {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(()-> new IllegalArgumentException("존재 하지 않은 포스터입니다"));
+
+        if(!findUser.getId().equals(user.getId())){
+            throw new IllegalArgumentException("회원 수정은 본인만 가능합니다");
+        }
+
+        String fileUrl = storageService.uploadFile(file);
+
+        findUser.updateUser(updateUserDto,fileUrl);
     }
 }
