@@ -1,6 +1,6 @@
 package com.example.foodthought.service;
 
-import com.example.foodthought.entity.User;
+import com.example.foodthought.dto.admin.GetUsersResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,15 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     //user
-    public List<User> findAllUser(){
-        return userService.findAllUser();
+    public List<GetUsersResponseDto> findAllUser(){
+         return userService.findAllUser()
+                 .stream()
+                 .map(user -> new GetUsersResponseDto(user))
+                 .toList();
     }
 
-    public User findUser(Long userId){
-        return userService.findUser(userId);
+    public GetUsersResponseDto findUser(Long userId){
+        return new GetUsersResponseDto(userService.findUser(userId));
     }
 
     @Transactional
