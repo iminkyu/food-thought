@@ -24,7 +24,7 @@ public class FollowService {
 
     //팔로우/취소
     @Transactional
-    public ResponseDto toggleFollow(User user, Long followerId) {
+    public void toggleFollow(User user, Long followerId) {
         User follower = userRepository.findById(followerId).orElseThrow(() ->
                 new IllegalArgumentException("해당하는 유저가 없습니다.")
         );
@@ -35,11 +35,10 @@ public class FollowService {
             Follow follow = buildEntity(user, follower);
             followRepository.save(follow);
         }
-        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
-    public ResponseDto findFollowerByLikeTop3() {
+    public ResponseDto<List<FollowTopResponseDto>> findFollowerByLikeTop3() {
         List<Object[]> top3 = followRepository.findFollowerByLikeTop3();
 
         List<FollowTopResponseDto> responseDtos = new ArrayList<>();
