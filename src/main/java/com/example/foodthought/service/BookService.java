@@ -78,6 +78,7 @@ public class BookService {
     }
 
 
+
     //책 실존유무 조회
     private Book findBook(Long bookId) {
         return bookRepository.findById(bookId).orElseThrow(()

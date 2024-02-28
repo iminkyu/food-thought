@@ -41,33 +41,4 @@ public class BookController {
     public ResponseEntity<ResponseDto<GetBookResponseDto>> getBook(@PathVariable Long bookId) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.getBook(bookId));
     }
-
-
-    //책 입력
-    @PostMapping
-    public ResponseEntity<ResponseDto<List<GetBookResponseDto>>> createBook(
-            @RequestPart CreateBookRequestDto createBookRequestDto,
-            @RequestPart(value = "bookImage", required = true) MultipartFile file) throws IOException {
-        bookService.createBook(createBookRequestDto, file);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-
-    //책 수정
-    @PutMapping("/{bookId}")
-    public ResponseEntity<ResponseDto<Void>> updateBook(
-            @PathVariable Long bookId,
-            @RequestPart UpdateBookRequestDto updateBookRequestDto,
-            @RequestPart(value = "bookImage", required = true) MultipartFile file) throws IOException {
-        bookService.updateBook(bookId, updateBookRequestDto, file);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-
-    //책 삭제
-    @DeleteMapping("/{bookId}")
-    public ResponseEntity<ResponseDto<Void>> deleteBook(@PathVariable Long bookId) {
-        bookService.deleteBook(bookId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }
