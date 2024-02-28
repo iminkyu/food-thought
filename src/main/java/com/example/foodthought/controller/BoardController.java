@@ -4,6 +4,7 @@ import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
 import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
+import com.example.foodthought.entity.User;
 import com.example.foodthought.security.UserDetailsImpl;
 import com.example.foodthought.service.BoardService;
 import lombok.RequiredArgsConstructor;

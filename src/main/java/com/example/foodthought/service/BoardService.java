@@ -11,13 +11,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-
     @Transactional
     public void createBoard(CreateBoardRequestDto create, User user) {
 
@@ -28,6 +30,8 @@ public class BoardService {
 
 
     public GetBoardResponseDto getAllBoards() {
+        // title, author, publisher, image, category, contents
+
       return null;
 
     }
@@ -40,6 +44,8 @@ public class BoardService {
         return null;
 
     }
+
+    //private List<>
 
 
     @Transactional
