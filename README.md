@@ -19,7 +19,8 @@
 
 
 ## WireFrame
-![team10-wireframe drawio](https://github.com/Intel-I5/food-thought/assets/155534061/5e9b5b21-4706-4b6a-b11d-4a5650538072)
+![team10-wireframe drawio (1)](https://github.com/Intel-I5/food-thought/assets/155534061/0730942c-a0eb-4ca0-8383-73f8cf73b41d)
+
 
 
 
