@@ -4,7 +4,8 @@ import com.example.foodthought.dto.user.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.File;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,11 +33,20 @@ public class User extends Timestamped{
     @Column()
     private String userPhoto;
 
+
     public User(CreateUserDto createUserDto, String passwordEncryption, String fileName){
         this.userId = createUserDto.getUserId();
         this.username = createUserDto.getUsername();
         this.password = passwordEncryption;
         this.intro = createUserDto.getIntro();
         this.userPhoto = fileName;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getUsername(), user.getUsername());
     }
 }

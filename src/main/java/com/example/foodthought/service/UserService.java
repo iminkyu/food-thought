@@ -37,6 +37,6 @@ public class UserService {
         User user = new User(createUserDto,passwordEncryption,fileUrl);
         userRepository.save(user);
 
-        return new ResponseDto(HttpStatus.CREATED.value(),"회원 가입 성공");
+        return ResponseDto.success(HttpStatus.CREATED.value(),"회원 가입 성공");
     }
 }
