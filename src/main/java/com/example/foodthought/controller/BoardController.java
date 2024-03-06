@@ -2,7 +2,6 @@ package com.example.foodthought.controller;
 
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
-import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
 import com.example.foodthought.security.UserDetailsImpl;
 import com.example.foodthought.service.BoardService;
@@ -19,45 +18,49 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    // 게시물 작성(JWTToken)
-    // 컨트롤러는 일을 하지 않는다  1. 일을 받아와서 서비스한테 시키고 서비스가 완료하면 받아온다 ==끝  2. 서비스한테 받은값을 일을 시킨사람한테 다시 준다 ==끝
+
+    //게시물 생성
     @PostMapping
-    public ResponseEntity<ResponseDto> createBoard(@RequestBody CreateBoardRequestDto create, //이용자가 입력한 도서정보
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) { //로그인한 유저의 정보
-                                                //서비스한테 일을 주는거예요
-//        ResponseEntity<ResponseDto> response = boardService.createBoard(create,userDetails.getUser()); // 1
-//        return response;
+    public ResponseEntity<ResponseDto> createBoard(@RequestBody CreateBoardRequestDto create,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(create, userDetails.getUser()));
-
     }
 
-    // 게시물 전체 조회
+
+    //전체 게시물 조회
     @GetMapping
-    public ResponseEntity<GetBoardResponseDto> totalInquiry(GetBoardResponseDto total,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return null;
+    public ResponseEntity<ResponseDto> getAllBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createAt") String sort,
+            @RequestParam(defaultValue = "false") boolean isASC
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getAllBoards(page, size, sort, isASC));
     }
 
-    // 게시물 단건 조회
+
+    //게시물 단건 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity<GetBoardResponseDto> oneInquiry(@PathVariable Long boardId,
-                                                          GetBoardResponseDto one,
-                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return null;
+    public ResponseEntity<ResponseDto> getBoard(@PathVariable Long boardId) {
+        return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId));
     }
 
-    // 게시물 수정(JWTToken)
+
+    //게시물 수정
     @PutMapping("/{boardId}")
-    public ResponseEntity<ResponseDto> updateBoard(@PathVariable Long boardId,
-                                                   @RequestBody UpdateBoardRequestDto update,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return null;
+    public ResponseEntity<Void> updateBoard(@PathVariable Long boardId,
+                                            @RequestBody UpdateBoardRequestDto update,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boardService.updateBoard(boardId, update, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // 게시물 삭제(JWTToken)
+
+    //게시물 삭제
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<ResponseDto> deleteBoard(@PathVariable Long boardId, ResponseDto delete,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return null;
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boardService.deleteBoard(boardId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

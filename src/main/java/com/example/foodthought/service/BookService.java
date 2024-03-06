@@ -28,25 +28,32 @@ public class BookService {
 
 
     //책 전체 조회
-    public ResponseDto getAllBook(int page, int size, String sort, boolean IsAsc) {
-        if (bookRepository.findAll().isEmpty()) {
-            throw new IllegalArgumentException("등록된 책이 없습니다.");
+    public ResponseDto<List<GetBookResponseDto>> getAllBook(int page, int size, String sort, boolean isAsc, String title) {
+        title = title.trim();
+        if(title.isEmpty()){
+            if (bookRepository.findAllByTitleContains(title).isEmpty()) {
+                throw new IllegalArgumentException("도서명에 " + title + "이 들어가는 책이 없습니다.");
+            }
+        } else {
+            if (bookRepository.findAll().isEmpty()) {
+                throw new IllegalArgumentException("등록된 책이 없습니다.");
+            }
         }
-        PageRequest pageRequest = PageRequest.of(page, size, !IsAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
-
-        return ResponseDto.success(200, convertToDtoList(bookRepository.findAll(pageRequest)));
+        PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
+        Page<Book> books = bookRepository.findAllByTitleContains(pageRequest, title);
+        return ResponseDto.success(200, convertToDtoList(books));
     }
 
 
     //책 단권 조회
-    public ResponseDto getBook(Long bookId) {
+    public ResponseDto<GetBookResponseDto> getBook(Long bookId) {
         return ResponseDto.success(200, convertToDto(findBook(bookId)));
     }
 
 
     //책 입력
     @Transactional
-    public ResponseDto createBook(CreateBookRequestDto createBookRequestDto, MultipartFile file) throws IOException {
+    public ResponseDto<Void> createBook(CreateBookRequestDto createBookRequestDto, MultipartFile file) throws IOException {
         bookRepository.save(convertToBook(createBookRequestDto, convertToString(file)));
         return ResponseDto.success(201);
     }
@@ -69,6 +76,7 @@ public class BookService {
     public void deleteBook(Long bookId) {
         bookRepository.delete(findBook(bookId));
     }
+
 
 
     //책 실존유무 조회
@@ -101,7 +109,7 @@ public class BookService {
                     .publisher(book.getPublisher())
                     .image(book.getImage())
                     .category(book.getCategory())
-                    .createdAt(book.getCreateAt())
+                    .createAt(book.getCreateAt())
                     .modifiedAt(book.getModifiedAt())
                     .build();
             getBookResponseDtos.add(dto);

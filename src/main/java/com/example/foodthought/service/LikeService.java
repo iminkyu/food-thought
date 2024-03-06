@@ -3,9 +3,11 @@ package com.example.foodthought.service;
 import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.like.LikeTopResponseDto;
 import com.example.foodthought.entity.Board;
+ import com.example.foodthought.entity.Book;
 import com.example.foodthought.entity.Like;
 import com.example.foodthought.entity.User;
 import com.example.foodthought.repository.BoardRepository;
+import com.example.foodthought.repository.BookRepository;
 import com.example.foodthought.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,11 @@ import java.util.List;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final BoardRepository boardRepository;
+    private final BookRepository bookRepository;
 
 
     //좋아요/좋아요 취소
-    public ResponseDto toggleLike(User user, Long boardId) {
+    public void toggleLike(User user, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("해당하는 게시물이 없습니다.")
         );
@@ -33,11 +36,10 @@ public class LikeService {
             Like like = buildLike(user, board);
             likeRepository.save(like);
         }
-        return ResponseDto.success(HttpStatus.NO_CONTENT.value());
     }
 
 
-    public ResponseDto findBoardByLikeTop3() {
+    public ResponseDto<List<LikeTopResponseDto>> findBoardByLikeTop3() {
         List<Object[]> top3 = likeRepository.findBoardByLikeTop3();
 
         List<LikeTopResponseDto> responseDtos = new ArrayList<>();
@@ -64,13 +66,15 @@ public class LikeService {
 
     //LikeTopResponseDto 생성
     private LikeTopResponseDto buildLikeTop(Board board ,Long countLikes){
+        Book book = bookRepository.findById(board.getBookId())
+                .orElseThrow( () -> new IllegalArgumentException("해당하는 책이 없습니다."));
         return LikeTopResponseDto.builder().boardId(board.getId())
-                .booktitle(board.getBook().getTitle())
-                .bookauthor(board.getBook().getAuthor())
-                .bookpublisher(board.getBook().getPublisher())
-                .bookcategory(board.getBook().getCategory())
-                .bookimage(board.getBook().getImage())
-                .username(board.getUsers().getUsername())
+                .booktitle(book.getTitle())
+                .bookauthor(book.getAuthor())
+                .bookpublisher(book.getPublisher())
+                .bookcategory(book.getCategory())
+                .bookimage(book.getImage())
+                .username(board.getUser().getUsername())
                 .contents(board.getContents())
                 .countLikes(countLikes).build();
     }

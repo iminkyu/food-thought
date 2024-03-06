@@ -4,67 +4,188 @@ import com.example.foodthought.common.dto.ResponseDto;
 import com.example.foodthought.dto.board.CreateBoardRequestDto;
 import com.example.foodthought.dto.board.GetBoardResponseDto;
 import com.example.foodthought.dto.board.UpdateBoardRequestDto;
-import com.example.foodthought.entity.Board;
-import com.example.foodthought.entity.User;
+import com.example.foodthought.entity.*;
 import com.example.foodthought.repository.BoardRepository;
-import com.example.foodthought.repository.UserRepository;
+import com.example.foodthought.repository.BookRepository;
+import com.example.foodthought.repository.CommentRepository;
+import com.example.foodthought.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+    private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
-    // 게시물 작성
-    public ResponseDto createBoard(CreateBoardRequestDto create, User user) {
-        //리턴타입                  //메소드      //메소드실행하기위해 받아온 값 (컨트롤러한테 받아온값)
-        //1. 게시물을 저장
-        //유저한테 받은 게시물의 입력값  + 로그인한유저정보를 합쳐서 게시물을 작성
 
-        //완희님한테 받아야함
-//        Board board = Board.builder().users(user).booktitle(create.getBooktitle()).bookauthor(create.getBookauthor())
-//                .bookpublisher(create.getBookpublisher()).bookcategory(create.getBookcategory()).bookimage(create.getBookimage())
-//                .contents(create.getContents()).build();
-//        //작성된 게시물 저장
-//        boardRepository.save(board);
-
-        //2. 잘 작성됬다고 알려줄건지 << 이용자/포스트맨 각 1씩
-        // 이용자한테전달할값 1 / postman전달할값 1
-        return ResponseDto.success(HttpStatus.CREATED.value(), "게시물이 작성되었습니다.");
-    }
-
-    // 게시물 전체 조회
-    public GetBoardResponseDto totalInquiry(GetBoardResponseDto total, User user) {
-        Board board = boardRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException());
-        return null;
-    }
-
-    // 게시물 단건 조회
-    public GetBoardResponseDto oneInquiry(Long boardid, GetBoardResponseDto one) {
-        return null;
-    }
-
-    // 게시물 수정(JWTToken)
+    //게시물 생성
     @Transactional
-    public Board updateBoard(Long boardid, UpdateBoardRequestDto update, User user) {
-        Board board = boardRepository.findById(boardid).orElseThrow(
-                () -> new NoSuchElementException("해당 ID를 찾을 수 없습니다."));
-
-        return null;
+    public ResponseDto<Void> createBoard(CreateBoardRequestDto create, User user) {
+        Book book = findBook(create.getBookId());
+        boardRepository.save(convertToBoard(create, user));
+        return ResponseDto.success(201);
     }
 
-    // 게시물 삭제(JWTToken)
+
+    //게시물 모두조회
+    public ResponseDto<List<GetBoardResponseDto>> getAllBoards(int page, int size, String sort, boolean isAsc) {
+        if (boardRepository.findAll().isEmpty()) {
+            throw new IllegalArgumentException("등록된 게시물이 없습니다.");
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
+        Page<Board> boards = boardRepository.findAll(pageRequest);
+        return ResponseDto.success(200, convertToDtoList(boards));
+    }
+
+
+    //게시물 단건조회
+    public ResponseDto<GetBoardResponseDto> getBoard(Long boardId) {
+        Board board = findBoard(boardId);
+        return ResponseDto.success(200, convertToDto(board));
+    }
+
+
+    //게시물 수정
     @Transactional
-    public ResponseDto deleteBoard(ResponseDto delete) {
-        return null;
+    public void updateBoard(Long boardId, UpdateBoardRequestDto updateBoardRequestDto, User user) {
+        Board board = findBoard(boardId);
+        if (!isMyBoard(board, user)) {
+            throw new IllegalArgumentException("게시물을 수정 할 수 있는 권한이 없습니다.");
+        }
+        Book book = findBook(updateBoardRequestDto.getBookId());
+        board.update(updateBoardRequestDto, user);
+        boardRepository.save(board);
     }
 
 
+    //게시물 삭제
+    @Transactional
+    public void deleteBoard(Long boardId, User user) {
+        Board board = findBoard(boardId);
+        if (!isMyBoard(board, user)) {
+            throw new IllegalArgumentException("게시물을 삭제할 수 있는 권한이 없습니다.");
+        }
+        List<Like> deleteLike = likeRepository.findLikesByBoard_Id(boardId);
+        likeRepository.deleteAll(deleteLike);
+        List<Comment> deleteComment = commentRepository.findCommentsByBoard_Id(boardId);
+        commentRepository.deleteAll(deleteComment);
+        boardRepository.delete(board);
+    }
+
+    @Transactional
+    public void deleteAdminBoard(Long boardId) {
+        Board board = findBoard(boardId);
+        List<Like> deleteLike = likeRepository.findLikesByBoard_Id(boardId);
+        likeRepository.deleteAll(deleteLike);
+        List<Comment> deleteComment = commentRepository.findCommentsByBoard_Id(boardId);
+        commentRepository.deleteAll(deleteComment);
+        boardRepository.delete(board);
+    }
+
+    @Transactional
+    public void blockBoard(Long boardId) {
+        Board board = findBoard(boardId);
+        board.block();
+    }
+
+
+    public List<GetBoardResponseDto> getAdminAllBoard(int page, int size, String sort, boolean isAsc) {
+        if (boardRepository.findAll().isEmpty()) {
+            throw new IllegalArgumentException("등록된 게시물이 없습니다.");
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
+        Page<Board> boards = boardRepository.findAll(pageRequest);
+        return adminConvertToDtoList(boards);
+    }
+
+
+    //게시물 찾기
+    private Board findBoard(Long boardId) {
+
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다."));
+    }
+
+
+    private Book findBook(Long bookId) {
+        return bookRepository.findById(bookId).orElseThrow(
+                () -> new IllegalArgumentException("해당 도서를 찾을 수 없습니다."));
+    }
+
+
+    //본인게시물인지 확인
+    private boolean isMyBoard(Board board, User user) {
+        return board.getUser().getId().equals(user.getId());
+    }
+
+
+    //Board -> GetBoardResponseDto
+    private GetBoardResponseDto convertToDto(Board board) {
+        Book book = findBook(board.getBookId());
+        return GetBoardResponseDto.builder()
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .publisher(book.getPublisher())
+                .image(book.getImage())
+                .category(book.getCategory())
+                .contents(board.getContents()).build();
+    }
+
+
+    //boards -> GetBoardResponseDtos
+    private List<GetBoardResponseDto> convertToDtoList(Page<Board> boards) {
+        List<GetBoardResponseDto> getBoardResponseDtos = new ArrayList<>();
+        for (Board board : boards) {
+            Book book = findBook(board.getBookId());
+            if(board.getStatus() == Status.Blocked) {
+                throw new IllegalArgumentException("Block 된 게시물 입니다");
+            }
+            GetBoardResponseDto dto = GetBoardResponseDto.builder()
+                    .title(book.getTitle())
+                    .author(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    .image(book.getImage())
+                    .category(book.getCategory())
+                    .contents(board.getContents()).build();
+            getBoardResponseDtos.add(dto);
+        }
+        return getBoardResponseDtos;
+    }
+
+
+    private List<GetBoardResponseDto> adminConvertToDtoList(Page<Board> boards) {
+        List<GetBoardResponseDto> getBoardResponseDtos = new ArrayList<>();
+        for (Board board : boards) {
+            Book book = findBook(board.getBookId());
+            GetBoardResponseDto dto = GetBoardResponseDto.builder()
+                    .title(book.getTitle())
+                    .author(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    .image(book.getImage())
+                    .category(book.getCategory())
+                    .contents(board.getContents()).build();
+            getBoardResponseDtos.add(dto);
+        }
+        return getBoardResponseDtos;
+    }
+
+
+    //book+user+dto -> board
+    private Board convertToBoard(CreateBoardRequestDto dto, User user) {
+        return Board.builder()
+                .bookId(dto.getBookId())
+                .user(user)
+                .contents(dto.getContents()).build();
+    }
 }
