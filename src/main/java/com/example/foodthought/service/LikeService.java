@@ -65,11 +65,11 @@ public class LikeService {
     //LikeTopResponseDto 생성
     private LikeTopResponseDto buildLikeTop(Board board ,Long countLikes){
         return LikeTopResponseDto.builder().boardId(board.getId())
-                .booktitle(board.getBooktitle())
-                .bookauthor(board.getBookauthor())
-                .bookpublisher(board.getBookpublisher())
-                .bookcategory(board.getBookcategory())
-                .bookimage(board.getBookimage())
+                .booktitle(board.getBook().getTitle())
+                .bookauthor(board.getBook().getAuthor())
+                .bookpublisher(board.getBook().getPublisher())
+                .bookcategory(board.getBook().getCategory())
+                .bookimage(board.getBook().getImage())
                 .username(board.getUsers().getUsername())
                 .contents(board.getContents())
                 .countLikes(countLikes).build();
