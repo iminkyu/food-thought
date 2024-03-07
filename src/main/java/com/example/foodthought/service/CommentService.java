@@ -48,7 +48,7 @@ public class CommentService {
     // 댓글, 대댓글 조회
     public List<CommentResponse> getComment(Long boardId) {
         findBoard(boardId);
-        List<Comment> commentList = commentRepository.findByBoardId(boardId);
+        List<Comment> commentList = commentRepository.findByBoardIdAndParentCommentIsNull(boardId);
         return convertToDtoList(commentList);
     }
 
@@ -141,7 +141,7 @@ public class CommentService {
     // admin 댓글 조회 (block 된 게시물까지 전부 출력)
     public List<CommentResponse> getAllComment(Long boardId) {
         findBoard(boardId);
-        List<Comment> commentList = commentRepository.findByBoardId(boardId);
+        List<Comment> commentList = commentRepository.findByBoardIdAndParentCommentIsNull(boardId);
         return AdminConvertToDtoList(commentList);
     }
 
