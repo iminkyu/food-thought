@@ -22,7 +22,15 @@
 ![team10-wireframe drawio (1)](https://github.com/Intel-I5/food-thought/assets/155534061/0730942c-a0eb-4ca0-8383-73f8cf73b41d)
 
 
-
+### 추가 기능 구현 사항
+- [x] Controller Advice로 공통 예외 처리하기
+- [x] Service 인터페이스와 구현체 분리하여 추상화 하기 (Auth, Comment 부분만 작업)
+- [ ] CustomException 정의 및 SpringAOP 적용
+- [ ] QueryDSL을 사용하여 검색 기능 만들기
+- [ ] Controller 테스트 코드 작성하기
+- [ ] Service 테스트 코드 작성하기
+- [ ] Repository 테스트 코드 작성하기
+- [ ] AWS EC2를 이용해 애플리케이션.jar 파일 배포하기
 
 ### 기능 구현사항
 - [x] 사용자 인증 기능
