@@ -89,8 +89,12 @@ public class AdminController {
 
     @GetMapping("/api/boards/{boardId}/comments")
     public List<CommentResponse> getAllAdminComment(
-            @PathVariable Long boardId) {
-        return adminService.getAllComment(boardId);
+            @PathVariable Long boardId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "createAt") String sort,
+            @RequestParam(defaultValue = "ture") Boolean isAsc) {
+        return adminService.getAllComment(boardId, page, size, sort, isAsc);
     }
 
     //book

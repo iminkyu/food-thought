@@ -73,8 +73,8 @@ public class AdminService {
     }
 
 
-    public List<CommentResponse> getAllComment(Long boardId) {
-        return commentService.getAllComment(boardId);
+    public List<CommentResponse> getAllComment(Long boardId, int page, int size, String sort, Boolean isAsc) {
+        return commentService.getAllComment(boardId, page, size, sort, isAsc);
     }
 
 
