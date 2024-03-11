@@ -27,6 +27,7 @@
 - [x] Service 인터페이스와 구현체 분리하여 추상화 하기 (Auth, Comment 부분만 작업)
 - [ ] CustomException 정의 및 SpringAOP 적용
 - [ ] QueryDSL을 사용하여 검색 기능 만들기
+- [x] Pageable을 사용하여 페이징 및 정렬 기능 만들기 (Board, Comment, Book 부분만 작업)
 - [ ] Controller 테스트 코드 작성하기
 - [ ] Service 테스트 코드 작성하기
 - [ ] Repository 테스트 코드 작성하기
