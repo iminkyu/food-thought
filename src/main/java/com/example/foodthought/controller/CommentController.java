@@ -6,6 +6,7 @@ import com.example.foodthought.dto.comment.CommentResponse;
 import com.example.foodthought.dto.comment.CreatCommentRequest;
 import com.example.foodthought.security.UserDetailsImpl;
 import com.example.foodthought.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class CommentController {
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<ResponseDto> createComment(
             @PathVariable Long boardId,
-            @RequestBody CreatCommentRequest creatCommentRequest,
+            @Valid @RequestBody CreatCommentRequest creatCommentRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(
@@ -38,9 +39,13 @@ public class CommentController {
 
     // 댓글 조회
     @GetMapping("/{boardId}/comments")
-    public List<CommentResponse> getComment(
-            @PathVariable Long boardId) {
-        return commentService.getComment(boardId);
+    public List<CommentResponse> getComments(
+            @PathVariable Long boardId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "createAt") String sort,
+            @RequestParam(defaultValue = "true") boolean isAsc) {
+        return commentService.getComment(boardId, page, size, sort, isAsc);
     }
 
 
