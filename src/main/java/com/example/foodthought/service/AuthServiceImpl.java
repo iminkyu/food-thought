@@ -25,6 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+    @Override
     public ResponseDto<Boolean> login(LoginUserDto loginUserDto,
                              HttpServletResponse response){
         Authentication authentication = authenticationManager.authenticate(
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         return ResponseDto.success(200, true);
     }
 
+    @Override
     public ResponseDto<Boolean> logout(HttpServletRequest request,
                               HttpServletResponse response){
 
