@@ -22,6 +22,7 @@ public class FollowServiceImpl implements FollowService {
 
 
     //팔로우/취소
+    @Override
     @Transactional
     public void toggleFollow(User user, Long followerId) {
         User follower = userRepository.findById(followerId).orElseThrow(() ->
@@ -36,7 +37,7 @@ public class FollowServiceImpl implements FollowService {
         }
     }
 
-
+    @Override
     public ResponseDto<List<FollowTopResponseDto>> findFollowerByLikeTop3() {
         List<Object[]> top3 = followRepository.findFollowerByLikeTop3();
 

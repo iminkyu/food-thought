@@ -78,8 +78,8 @@ public class CommentServiceImpl implements CommentService {
 
 
     // 대댓글 수정
-    @Transactional
     @Override
+    @Transactional
     public ResponseDto updateReply(Long boardId, Long parentCommentId, Long replyId, CommentRequest commentRequest, User user) {
         Comment reply = findReply(replyId);
 
@@ -96,8 +96,8 @@ public class CommentServiceImpl implements CommentService {
 
 
     // 댓글 삭제
-    @Transactional
     @Override
+    @Transactional
     public void deleteComment(Long boardId, Long commentId, User user) {
         findBoard(boardId);
         User findUser = findUser(user);
@@ -112,8 +112,8 @@ public class CommentServiceImpl implements CommentService {
 
 
     // 대댓글 삭제
-    @Transactional
     @Override
+    @Transactional
     public void deleteReply(Long boardId, Long parentCommentId, Long replyId, User user) {
         Comment reply = findReply(replyId);
 

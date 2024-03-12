@@ -29,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //게시물 생성
+    @Override
     @Transactional
     public ResponseDto<Void> createBoard(CreateBoardRequestDto create, User user) {
         Book book = findBook(create.getBookId());
@@ -38,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //게시물 모두조회
+    @Override
     public ResponseDto<List<GetBoardResponseDto>> getAllBoards(int page, int size, String sort, boolean isAsc) {
         if (boardRepository.findAll().isEmpty()) {
             throw new IllegalArgumentException("등록된 게시물이 없습니다.");
@@ -49,6 +51,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //게시물 단건조회
+    @Override
     public ResponseDto<GetBoardResponseDto> getBoard(Long boardId) {
         Board board = findBoard(boardId);
         return ResponseDto.success(200, convertToDto(board));
@@ -56,6 +59,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //게시물 수정
+    @Override
     @Transactional
     public void updateBoard(Long boardId, UpdateBoardRequestDto updateBoardRequestDto, User user) {
         Board board = findBoard(boardId);
@@ -69,6 +73,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //게시물 삭제
+    @Override
     @Transactional
     public void deleteBoard(Long boardId, User user) {
         Board board = findBoard(boardId);
@@ -82,6 +87,7 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board);
     }
 
+    @Override
     @Transactional
     public void deleteAdminBoard(Long boardId) {
         Board board = findBoard(boardId);
@@ -92,13 +98,14 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board);
     }
 
+    @Override
     @Transactional
     public void blockBoard(Long boardId) {
         Board board = findBoard(boardId);
         board.block();
     }
 
-
+    @Override
     public List<GetBoardResponseDto> getAdminAllBoard(int page, int size, String sort, boolean isAsc) {
         if (boardRepository.findAll().isEmpty()) {
             throw new IllegalArgumentException("등록된 게시물이 없습니다.");
