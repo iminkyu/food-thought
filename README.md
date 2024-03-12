@@ -24,7 +24,7 @@
 
 ### 추가 기능 구현 사항
 - [x] Controller Advice로 공통 예외 처리하기
-- [x] Service 인터페이스와 구현체 분리하여 추상화 하기 (Auth, Comment 부분만 작업)
+- [x] Service 인터페이스와 구현체 분리하여 추상화 하기
 - [ ] CustomException 정의 및 SpringAOP 적용
 - [ ] QueryDSL을 사용하여 검색 기능 만들기
 - [x] Pageable을 사용하여 페이징 및 정렬 기능 만들기 (Board, Comment, Book 부분만 작업)
