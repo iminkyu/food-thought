@@ -52,6 +52,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     // 댓글, 대댓글 조회
+    @Override
     public List<CommentResponse> getComment(Long boardId, int page, int size, String sort, boolean isAsc) {
         findBoard(boardId);
         PageRequest pageRequest = PageRequest.of(page, size, isAsc ? Sort.by(sort).ascending() : Sort.by(sort).descending());
@@ -62,6 +63,7 @@ public class CommentServiceImpl implements CommentService {
 
     // 댓글 수정
     @Transactional
+    @Override
     public ResponseDto updateComment(Long boardId, Long commentId, CommentRequest commentRequest, User user) {
         findBoard(boardId);
         User findUser = findUser(user);
@@ -77,6 +79,7 @@ public class CommentServiceImpl implements CommentService {
 
     // 대댓글 수정
     @Transactional
+    @Override
     public ResponseDto updateReply(Long boardId, Long parentCommentId, Long replyId, CommentRequest commentRequest, User user) {
         Comment reply = findReply(replyId);
 
@@ -94,6 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
     // 댓글 삭제
     @Transactional
+    @Override
     public void deleteComment(Long boardId, Long commentId, User user) {
         findBoard(boardId);
         User findUser = findUser(user);
@@ -109,6 +113,7 @@ public class CommentServiceImpl implements CommentService {
 
     // 대댓글 삭제
     @Transactional
+    @Override
     public void deleteReply(Long boardId, Long parentCommentId, Long replyId, User user) {
         Comment reply = findReply(replyId);
 
@@ -124,6 +129,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     // admin 댓글 block
+    @Override
     public void blockComment(Long boardId, Long commentId, User user) {
         if (UserRoleEnum.USER.equals(user.getRole())) {
             throw new IllegalArgumentException("관리자 권한이 없습니다.");
@@ -135,6 +141,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     // admin 댓글 삭제
+    @Override
     public void deleteAdminComment(Long boardId, Long commentId, User user) {
         if (UserRoleEnum.USER.equals(user.getRole())) {
             throw new IllegalArgumentException("관리자 권한이 없습니다.");
@@ -146,6 +153,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     // admin 댓글 조회 (block 된 게시물까지 전부 출력)
+    @Override
     public List<CommentResponse> getAllComment(Long boardId, int page, int size, String sort, boolean isAsc) {
         findBoard(boardId);
         PageRequest pageRequest = PageRequest.of(page, size, isAsc ? Sort.by(sort).ascending() : Sort.by(sort).descending());
@@ -155,6 +163,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     // admin 조회 로직 (block 된 게시물까지 전부 출력)
+
     private List<CommentResponse> AdminConvertToDtoList(Page<Comment> commentList) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (Comment comment : commentList) {

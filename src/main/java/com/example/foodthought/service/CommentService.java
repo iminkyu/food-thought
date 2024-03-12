@@ -101,5 +101,5 @@ public interface CommentService {
      * @return List<CommentResponse>
      */
 
-    List<CommentResponse> getAllComment(Long boardId, int page, int size, String sort, boolean isAsc);
+    public List<CommentResponse> getAllComment(Long boardId, int page, int size, String sort, boolean isAsc);
 }
