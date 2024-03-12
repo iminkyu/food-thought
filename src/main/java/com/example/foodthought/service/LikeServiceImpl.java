@@ -25,6 +25,7 @@ public class LikeServiceImpl implements LikeService {
 
 
     //좋아요/좋아요 취소
+    @Override
     public void toggleLike(User user, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() ->
                 new IllegalArgumentException("해당하는 게시물이 없습니다.")
@@ -38,7 +39,7 @@ public class LikeServiceImpl implements LikeService {
         }
     }
 
-
+    @Override
     public ResponseDto<List<LikeTopResponseDto>> findBoardByLikeTop3() {
         List<Object[]> top3 = likeRepository.findBoardByLikeTop3();
 

@@ -7,10 +7,12 @@ import com.example.foodthought.dto.book.UpdateBookRequestDto;
 import com.example.foodthought.entity.Book;
 import com.example.foodthought.repository.BookRepository;
 import com.example.foodthought.util.StorageService;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +27,10 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final StorageService storageService;
-
+    private final JPAQueryFactory queryFactory;
 
     //책 전체 조회
+    @Override
     public ResponseDto<List<GetBookResponseDto>> getAllBook(int page, int size, String sort, boolean isAsc, String title) {
         title = title.trim();
         if(title.isEmpty()){
@@ -46,12 +49,14 @@ public class BookServiceImpl implements BookService {
 
 
     //책 단권 조회
+    @Override
     public ResponseDto<GetBookResponseDto> getBook(Long bookId) {
         return ResponseDto.success(200, convertToDto(findBook(bookId)));
     }
 
 
     //책 입력
+    @Override
     @Transactional
     public ResponseDto<Void> createBook(CreateBookRequestDto createBookRequestDto, MultipartFile file) throws IOException {
         bookRepository.save(convertToBook(createBookRequestDto, convertToString(file)));
@@ -60,6 +65,7 @@ public class BookServiceImpl implements BookService {
 
 
     //책 수정
+    @Override
     @Transactional
     public void updateBook(
             Long bookId,
@@ -72,6 +78,7 @@ public class BookServiceImpl implements BookService {
 
 
     //책 삭제
+    @Override
     @Transactional
     public void deleteBook(Long bookId) {
         bookRepository.delete(findBook(bookId));

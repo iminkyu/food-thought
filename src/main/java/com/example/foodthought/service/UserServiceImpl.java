@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
 
+    @Override
     @Transactional
     public ResponseDto createUser(CreateUserDto createUserDto, MultipartFile file) throws IOException {
         Optional<User> findUser = userRepository.findByUserId(createUserDto.getUserId());
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         return ResponseDto.success(HttpStatus.CREATED.value(),"회원 가입 성공");
     }
 
+    @Override
     @Transactional
     public void updateUser(Long userId, UpdateUserDto updateUserDto, MultipartFile file, User user) throws IOException {
         User findUser = userRepository.findById(userId)
