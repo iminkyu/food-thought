@@ -36,7 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(tokenValue)) {
 
-            if (!jwtUtil.validateToken(tokenValue)) {
+            if (!jwtUtil.validateToken(tokenValue)) {  // 여기서 validate 할 필요가 없다..
 
                 res.setStatus(HttpStatus.BAD_REQUEST.value());
                 res.setContentType("application/json");
@@ -46,7 +46,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
             Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
-
+    // 암복호화는 굉장히 코스트가 비싼 로직이다. 굉장히 느려서 여러번 할 필요가 없음.
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
