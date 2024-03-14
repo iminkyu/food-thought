@@ -50,6 +50,7 @@ public class BookServiceImpl implements BookService {
 
     //책 단권 조회
     @Override
+    @Transactional(readOnly = true)
     public ResponseDto<GetBookResponseDto> getBook(Long bookId) {
         return ResponseDto.success(200, convertToDto(findBook(bookId)));
     }
