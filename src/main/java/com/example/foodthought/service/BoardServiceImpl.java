@@ -40,13 +40,13 @@ public class BoardServiceImpl implements BoardService {
 
     //게시물 모두조회
     @Override
-    public ResponseDto<List<GetBoardResponseDto>> getAllBoards(int page, int size, String sort, boolean isAsc) {
+    public ResponseDto<Page<GetBoardResponseDto>> getAllBoards(int page, int size, String sort, boolean isAsc) {
         if (boardRepository.findAll().isEmpty()) {
             throw new IllegalArgumentException("등록된 게시물이 없습니다.");
         }
         PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
-        Page<Board> boards = boardRepository.findAll(pageRequest);
-        return ResponseDto.success(200, convertToDtoList(boards));
+        Page<GetBoardResponseDto> boards = boardRepository.findAllBoards(pageRequest);
+        return ResponseDto.success(200, boards);
     }
 
 
