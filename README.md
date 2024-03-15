@@ -28,10 +28,8 @@
 - [x] CustomException 정의 및 SpringAOP 적용
 - [x] QueryDSL을 사용하여 검색 기능 만들기
 - [x] Pageable을 사용하여 페이징 및 정렬 기능 만들기 (Board, Comment, Book 부분만 작업)
-- [ ] Controller 테스트 코드 작성하기
-- [ ] Service 테스트 코드 작성하기
-- [ ] Repository 테스트 코드 작성하기
-- [ ] AWS EC2를 이용해 애플리케이션.jar 파일 배포하기
+- [ ] 테스트 코드 작성하기
+- [x] AWS EC2를 이용해 애플리케이션.jar 파일 배포하기
 
 ### 기능 구현사항
 - [x] 사용자 인증 기능
