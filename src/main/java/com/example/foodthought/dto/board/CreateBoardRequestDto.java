@@ -1,12 +1,11 @@
 package com.example.foodthought.dto.board;
 
-import lombok.*;
-
-import java.awt.print.Book;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
 public class CreateBoardRequestDto {
-    private Long bookId;
-    private String contents;
+    public Long bookId;
+    public String contents;
 }
