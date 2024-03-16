@@ -46,7 +46,7 @@ public class BoardServiceImpl implements BoardService {
         }
         PageRequest pageRequest = PageRequest.of(page, size, !isAsc ? Sort.by(sort).descending() : Sort.by(sort).ascending());
         Page<GetBoardResponseDto> boards = boardRepository.findAllBoards(pageRequest);
-        return ResponseDto.success(200, boards);
+        return ResponseDto.success(200,boards);
     }
 
 
